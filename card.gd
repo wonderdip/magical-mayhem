@@ -10,7 +10,7 @@ class_name Card
 var dragging := false
 var drag_offset := Vector2.ZERO
 var mouse_over := false
-var hand: Node2D  # Reference to hand
+var hand: Node2D
 var base_z: int
 var hovering := false
 
@@ -25,7 +25,6 @@ func _ready():
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	base_z = z_index
 	pivot_offset = size * 0.5
-
 
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
@@ -69,20 +68,22 @@ func _process(delta: float) -> void:
 		# Manual drag positioning
 		global_position = global_position.lerp(mouse_pos - drag_offset, lerp_speed * delta)
 		rotation_degrees = lerp(rotation_degrees, 0.0, lerp_speed * delta)
+		
+		if hand:
+			hand.update_card_order(global_position.x)
 	else:
 		# Check if we should be hovering
 		var can_hover = hand and not hand.is_dragging_card
 		var should_hover = mouse_over and is_topmost_card() and can_hover
 		
 		if should_hover:
-			# Hovering state - lift card up and scale
+			# Hovering state
 			hovering = true
 			var hover_pos := target_position + Vector2(0, -hover_lift)
 			global_position = global_position.lerp(hover_pos, lerp_speed * delta)
 			scale = scale.lerp(Vector2(1.1, 1.1), lerp_speed * delta)
-			
 		else:
-			# Normal state - return to target
+			# Normal state
 			hovering = false
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
@@ -96,10 +97,12 @@ func is_topmost_card() -> bool:
 	var highest_z = z_index
 	
 	for card in hand.cards:
-		if card != self:
-			var card_rect = Rect2(card.global_position, card.size)
-			if card_rect.has_point(mouse_pos) and card.z_index > highest_z:
-				return false
+		if not is_instance_valid(card) or card == self:
+			continue
+			
+		var card_rect = Rect2(card.global_position, card.size)
+		if card_rect.has_point(mouse_pos) and card.z_index > highest_z:
+			return false
 	
 	return true
 
@@ -116,20 +119,18 @@ func _input(event: InputEvent) -> void:
 			dragging = true
 			hovering = false
 			drag_offset = global_position - get_global_mouse_position()
-			hand.set_card_dragging(true)
+			hand.start_dragging(self)
 			
 			# Bring to front
 			var max_z = base_z
 			for card in hand.cards:
-				max_z = max(max_z, card.z_index)
+				if is_instance_valid(card):
+					max_z = max(max_z, card.z_index)
 			z_index = max_z + 1
 			
 			get_viewport().set_input_as_handled()
 			
 		elif not event.pressed and dragging:
-			# Stop dragging
 			dragging = false
+			hand.stop_dragging()
 			z_index = base_z
-			hand.set_card_dragging(false)
-			hand.update_hand()
-			get_viewport().set_input_as_handled()

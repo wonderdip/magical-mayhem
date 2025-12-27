@@ -25,7 +25,7 @@ offset_bottom = 103.0
 text = "Discard"
 alignment = 0
 
-[node name="Deck" type="Area2D" parent="."]
+[node name="Deck" type="Node2D" parent="."]
 position = Vector2(36, 472)
 script = ExtResource("3_1bvp3")
 
@@ -42,5 +42,12 @@ grow_vertical = 2
 texture = ExtResource("3_h2yge")
 expand_mode = 1
 
+[node name="Poptimer" type="Timer" parent="Deck"]
+wait_time = 0.1
+one_shot = true
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]
+[connection signal="gui_input" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_gui_input"]
+[connection signal="mouse_entered" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_entered"]
+[connection signal="mouse_exited" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_exited"]
