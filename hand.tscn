@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsrym2ob4rqra"]
+
+[ext_resource type="Script" uid="uid://sakje2u0aibv" path="res://hand.gd" id="1_u4p2i"]
+
+[node name="Hand" type="Node2D"]
+script = ExtResource("1_u4p2i")
+hand_width = 640.0
+min_hand_width = 160.0
+
+[node name="HandCurve" type="Line2D" parent="."]

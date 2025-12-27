@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardTemplate" load_steps=3 format=3 uid="uid://bv6t2lkgue7sp"]
+
+[ext_resource type="Texture2D" uid="uid://dujiv6jtos4kj" path="res://Assets/CardTextures/Earth quake.png" id="1_awd75"]
+[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://card_template.gd" id="1_fimt8"]
+
+[resource]
+script = ExtResource("1_fimt8")
+name = "Earthquake"
+dmg = 5
+earth_cost = 4
+card_texture = ExtResource("1_awd75")
+Nature = "Earth"
+description = "Deal (DMG) Damage"
+metadata/_custom_type_script = "uid://dxbp03a55cebo"

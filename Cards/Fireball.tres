@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardTemplate" load_steps=3 format=3 uid="uid://wwwtynh38qlq"]
+
+[ext_resource type="Texture2D" uid="uid://dsyuaq12n0hel" path="res://Assets/CardTextures/Fire ball.png" id="1_x8xue"]
+[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://card_template.gd" id="2_6cj7c"]
+
+[resource]
+script = ExtResource("2_6cj7c")
+name = "Fireball"
+dmg = 4
+fire_cost = 4
+wind_cost = 1
+card_texture = ExtResource("1_x8xue")
+Nature = "Fire"
+description = "Deal (DMG) Damage"
+metadata/_custom_type_script = "uid://dxbp03a55cebo"

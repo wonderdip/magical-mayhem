@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardTemplate" load_steps=3 format=3 uid="uid://bn4h4rerjry53"]
+
+[ext_resource type="Texture2D" uid="uid://dryqqdmkft1yc" path="res://Assets/CardTextures/Water prison.png" id="1_t7wcv"]
+[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://card_template.gd" id="1_w4ifo"]
+
+[resource]
+script = ExtResource("1_w4ifo")
+name = "Waterprison"
+dmg = 2
+water_cost = 3
+earth_cost = 1
+card_texture = ExtResource("1_t7wcv")
+Nature = "Water"
+description = "Deal (DMG) Damage"
+metadata/_custom_type_script = "uid://dxbp03a55cebo"
