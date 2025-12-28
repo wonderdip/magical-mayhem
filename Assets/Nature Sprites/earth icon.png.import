@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bih3g2umog5tc"
-path="res://.godot/imported/earth icon.png-4339c24fd56847609bfc7e02a8d22c14.ctex"
+path="res://.godot/imported/earth icon.png-604109ce0ee4d1ebaa37621aa474088e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardTextures/earth icon.png"
-dest_files=["res://.godot/imported/earth icon.png-4339c24fd56847609bfc7e02a8d22c14.ctex"]
+source_file="res://Assets/Nature Sprites/earth icon.png"
+dest_files=["res://.godot/imported/earth icon.png-604109ce0ee4d1ebaa37621aa474088e.ctex"]
 
 [params]
 

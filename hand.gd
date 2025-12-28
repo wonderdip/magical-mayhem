@@ -1,16 +1,18 @@
 extends Node2D
 
 @export var hand_center := Vector2(640, 480)
-@export var hand_width := 960.0
+@export var hand_width := 640.0
 @export var hand_curve := 140.0
 @export var card_spacing := 100.0
 @export var max_rotation := 15.0
 
 @onready var curve: Line2D =  $HandCurve
 @onready var deck: Node2D = $"../Deck"
+@onready var discard: Node2D = $"../Discard"
 
-@export var min_hand_width := 300.0
+@export var min_hand_width := 160.0
 @export var max_cards := 10
+@export var max_handsize: int = 20
 
 var cards: Array[Card] = []
 var is_dragging_card := false
@@ -18,18 +20,22 @@ var dragged_card: Card = null
 var dragged_card_original_index: int = -1
 
 func add_card(card: Card) -> void:
-	card.global_position = deck.global_position
-	card.z_index = cards.size()
-	deck.z_index = card.z_index + 1
-	add_child(card)
-	cards.append(card)
-	card.hand = self
-	card._set_stats(CardDatabase.get_random_card())
-	update_hand()
+	if cards.size() <= max_handsize:
+		card.global_position = deck.global_position
+		card.z_index = cards.size()
+		deck.z_index = card.z_index + 1
+		add_child(card)
+		cards.append(card)
+		card.hand = self
+		card._set_stats(CardDatabase.get_random_card())
+		update_hand()
 	
 func remove_card(card: Card) -> void:
 	if card in cards:
 		cards.erase(card)
+		card.animation_player.play("discard")
+		card.global_position = discard.global_position
+		await card.animation_player.animation_finished
 		card.queue_free()
 	update_hand()
 	
@@ -90,7 +96,6 @@ func update_card_order(global_x: float) -> void:
 		cards.remove_at(dragged_card_original_index)
 		# Insert at new position
 		cards.insert(new_index, dragged_card)
-		# Update stored index
 		dragged_card_original_index = new_index
 		# Refresh layout
 		update_hand()

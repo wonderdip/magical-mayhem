@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bau3icck8v5sb"
-path="res://.godot/imported/fire icon.png-23290d557735433c6bbaa3ba69d4931a.ctex"
+path="res://.godot/imported/fire icon.png-18aafbedf2b37272ba0c804aa672eaed.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardTextures/fire icon.png"
-dest_files=["res://.godot/imported/fire icon.png-23290d557735433c6bbaa3ba69d4931a.ctex"]
+source_file="res://Assets/Nature Sprites/fire icon.png"
+dest_files=["res://.godot/imported/fire icon.png-18aafbedf2b37272ba0c804aa672eaed.ctex"]
 
 [params]
 

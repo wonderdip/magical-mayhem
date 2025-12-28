@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkptfuyb5rar3"
-path="res://.godot/imported/water icon.png-69e2b0e2267b9a5a55d3599259ec98c2.ctex"
+uid="uid://cyobep72syd2e"
+path="res://.godot/imported/wind icon.png-ccf6bb81ce8ac540c57d3269be2d8b4b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardTextures/water icon.png"
-dest_files=["res://.godot/imported/water icon.png-69e2b0e2267b9a5a55d3599259ec98c2.ctex"]
+source_file="res://Assets/Nature Sprites/wind icon.png"
+dest_files=["res://.godot/imported/wind icon.png-ccf6bb81ce8ac540c57d3269be2d8b4b.ctex"]
 
 [params]
 

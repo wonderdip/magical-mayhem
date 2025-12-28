@@ -7,6 +7,22 @@ class_name Card
 @onready var description: RichTextLabel = $Container/Description
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+@onready var fire_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/FireCost
+@onready var water_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/WaterCost
+@onready var wind_cost: HBoxContainer = $Container/HBoxContainer/RightCost/WindCost
+@onready var earth_cost: HBoxContainer = $Container/HBoxContainer/RightCost/EarthCost
+
+@onready var left_cost: VBoxContainer = $Container/HBoxContainer/LeftCost
+@onready var right_cost: VBoxContainer = $Container/HBoxContainer/RightCost
+
+var nature_sprites := {
+	"fire": preload("res://Assets/Nature Sprites/fire icon.png"),
+	"water": preload("res://Assets/Nature Sprites/water icon.png"),
+	"wind": preload("res://Assets/Nature Sprites/wind icon.png"),
+	"earth": preload("res://Assets/Nature Sprites/earth icon.png")
+}
+
+
 var dragging := false
 var drag_offset := Vector2.ZERO
 var mouse_over := false
@@ -18,14 +34,21 @@ var hovering := false
 var target_position := Vector2.ZERO
 var target_rotation := 0.0
 @export var lerp_speed := 15.0
-@export var hover_lift := 20.0
+@export var hover_lift := 40.0
 
 func _ready():
 	animation_player.play("card_flip")
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	base_z = z_index
 	pivot_offset = size * 0.5
-
+	
+	left_cost.hide()
+	right_cost.hide()
+	fire_cost.hide()
+	water_cost.hide()
+	wind_cost.hide()
+	earth_cost.hide()
+	
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
 	card_sprite.texture = stats.card_texture
@@ -47,7 +70,41 @@ func _set_stats(stats: CardTemplate):
 		"[color=green][b]%s[/b][/color]" % stats.heal
 	)
 	description.text = desc_text
+	
+	_set_costs(fire_cost, stats.fire_cost, "fire")
+	_set_costs(water_cost, stats.water_cost, "water")
+	_set_costs(earth_cost, stats.earth_cost, "earth")
+	_set_costs(wind_cost, stats.wind_cost, "wind")
+func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
+	var texture: Texture2D = nature_sprites.get(nature)
+	if texture == null:
+		return
 
+	for i in amount:
+		var icon := TextureRect.new()
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		
+		match nature:
+			"fire":
+				icon.custom_minimum_size = Vector2(10.18, 14)
+				fire_cost.show()
+				left_cost.show()
+			"water":
+				icon.custom_minimum_size = Vector2(7.56, 14)
+				water_cost.show()
+				left_cost.show()
+			"earth":
+				icon.custom_minimum_size = Vector2(19.18, 14)
+				earth_cost.show()
+				right_cost.show()
+			"wind":
+				icon.custom_minimum_size = Vector2(17.78, 14)
+				wind_cost.show()
+				right_cost.show()
+		icon.texture = texture
+		container.add_child(icon)
+		
+		
 func bbcode_color(color: Color, text: String) -> String:
 	return "[color=#%s][b]%s[/b][/color]" % [
 		color.to_html(false),
@@ -55,7 +112,7 @@ func bbcode_color(color: Color, text: String) -> String:
 	]
 
 func _process(delta: float) -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or animation_player.current_animation == "discard":
 		return
 	
 	# Check if mouse is over card

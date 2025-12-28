@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba82tsdvno7ke"]
+
+[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://deck.gd" id="1_f0yuw"]
+[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="2_rqxj1"]
+
+[node name="Deck" type="Node2D"]
+script = ExtResource("1_f0yuw")
+
+[node name="DeckSprite" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 152.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rqxj1")
+expand_mode = 1
+
+[node name="Poptimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="gui_input" from="DeckSprite" to="." method="_on_deck_sprite_gui_input"]
+[connection signal="mouse_entered" from="DeckSprite" to="." method="_on_deck_sprite_mouse_entered"]
+[connection signal="mouse_exited" from="DeckSprite" to="." method="_on_deck_sprite_mouse_exited"]
