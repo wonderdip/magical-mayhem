@@ -37,13 +37,24 @@ func add_card() -> void:
 		update_hand()
 	
 func remove_card(card: Card) -> void:
-	if card in cards:
-		cards.erase(card)
-		card.animation_player.play("discard")
-		card.global_position = card.global_position.lerp(discard.global_position, 10 * get_process_delta_time()) 
-		await card.animation_player.animation_finished
-		card.queue_free()
+	if card not in cards:
+		return
+	cards.erase(card)
+	var tween := get_tree().create_tween()
+	tween.tween_property(
+		card,
+		"global_position",
+		discard.global_position,
+		0.5
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+	card.animation_player.play("discard")
+	await card.animation_player.animation_finished
+
+	card.queue_free()
 	update_hand()
+
 
 func add_selected_card(card: Card) -> void:
 	if card in selected_cards:

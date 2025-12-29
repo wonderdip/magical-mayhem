@@ -49,7 +49,7 @@ offset_bottom = 312.0
 texture = ExtResource("6_6iyac")
 expand_mode = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="PlayCards" type="Button" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -65,18 +65,28 @@ text = "Play Cards"
 
 [node name="Wizard" parent="." instance=ExtResource("7_6bp64")]
 
-[node name="AdvancePhase" type="Button" parent="."]
-offset_left = 78.0
-offset_top = 235.0
-offset_right = 294.0
-offset_bottom = 390.0
-text = "Advance Phase"
+[node name="EndTurn" type="Button" parent="."]
+offset_left = 984.0
+offset_top = 616.0
+offset_right = 1104.0
+offset_bottom = 680.0
+text = "End Turn"
 
 [node name="Label" type="Label" parent="."]
 offset_left = 570.0
 offset_top = 66.0
 offset_right = 882.0
 offset_bottom = 153.0
+theme_override_font_sizes/font_size = 71
+text = "Label 1"
+
+[node name="Label2" type="Label" parent="."]
+offset_left = 576.0
+offset_top = 176.0
+offset_right = 785.0
+offset_bottom = 267.0
+theme_override_font_sizes/font_size = 66
+text = "label 2"
 
 [node name="Natures" type="Node2D" parent="."]
 position = Vector2(1560, 152)
@@ -149,5 +159,5 @@ layout_mode = 2
 [connection signal="mouse_exited" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_exited"]
 [connection signal="mouse_entered" from="Discard/DiscardSprite" to="Discard" method="_on_discard_sprite_mouse_entered"]
 [connection signal="mouse_exited" from="Discard/DiscardSprite" to="Discard" method="_on_discard_sprite_mouse_exited"]
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="AdvancePhase" to="." method="_on_advance_phase_pressed"]
+[connection signal="pressed" from="PlayCards" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="EndTurn" to="." method="_on_end_turn_pressed"]

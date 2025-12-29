@@ -16,6 +16,8 @@ func _ready() -> void:
 	
 func _change_phase() -> void:
 	current_phase = (current_phase + 1) % Phase.size() as Phase
+	if current_phase == Phase.DEFEND:
+		current_player_turn = (current_player_turn + 1) % PlayerTurn.size() as PlayerTurn
 	phase_changed.emit()
 	
 func _change_player_turn() -> void:

@@ -4,7 +4,10 @@ extends Node2D
 @onready var deck: Node2D = $Deck
 @onready var discard: Node2D = $Discard
 @onready var label: Label = $Label
+@onready var label_2: Label = $Label2
 @onready var natures: Node2D = $Natures
+@onready var end_turn: Button = $EndTurn
+@onready var play_cards: Button = $PlayCards
 
 var is_first_draw: bool = true
 
@@ -43,6 +46,17 @@ func _process(_delta: float) -> void:
 		2:
 			label.text = "DEFEND PHASE"
 			
+	match PhaseManager.current_player_turn:
+		0:
+			label_2.text = "PLAYER ONE TURN"
+			end_turn.disabled = false
+			play_cards.disabled = false
+		1:
+			label_2.text = "PLAYER TWO TURN"
+			end_turn.disabled = true
+			play_cards.disabled = true
+		
+		
 func _on_phase_changed() -> void:
 	if PhaseManager.current_phase == PhaseManager.Phase.DRAW:
 		if is_first_draw:
@@ -55,5 +69,5 @@ func _on_phase_changed() -> void:
 		natures.change_labels()
 		PhaseManager._change_phase()
 
-func _on_advance_phase_pressed() -> void:
+func _on_end_turn_pressed() -> void:
 	PhaseManager._change_phase()

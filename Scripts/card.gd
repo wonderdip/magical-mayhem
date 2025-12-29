@@ -92,7 +92,7 @@ func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	var texture: Texture2D = nature_sprites.get(nature)
 	if texture == null:
 		return
-
+		
 	for i in amount:
 		var icon := TextureRect.new()
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
