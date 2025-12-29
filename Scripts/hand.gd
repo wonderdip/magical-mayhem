@@ -19,7 +19,12 @@ var is_dragging_card := false
 var dragged_card: Card = null
 var dragged_card_original_index: int = -1
 
-func add_card(card: Card) -> void:
+var selected_cards: Array[Card] = []
+
+func add_card() -> void:
+	var new_card = preload("res://Scenes/card.tscn")
+	var card = new_card.instantiate()
+	
 	if cards.size() <= max_handsize:
 		card.global_position = deck.global_position
 		card.z_index = cards.size()
@@ -38,7 +43,25 @@ func remove_card(card: Card) -> void:
 		await card.animation_player.animation_finished
 		card.queue_free()
 	update_hand()
-	
+
+func add_selected_card(card: Card) -> void:
+	if card in selected_cards:
+		return
+	selected_cards.append(card)
+	card.selected = true
+	update_hand()
+
+func remove_selected_card(card: Card) -> void:
+	if card not in selected_cards:
+		return
+	selected_cards.erase(card)
+	card.selected = false
+	update_hand()
+
+func play_cards():
+	for card in selected_cards:
+		card.play()
+		
 func update_hand() -> void:
 	var count := cards.size()
 	if count == 0:

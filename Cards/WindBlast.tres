@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CardTemplate" load_steps=3 format=3 uid="uid://bv4f6xmtj4tif"]
 
-[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://card_template.gd" id="1_80or2"]
+[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://Scripts/card_template.gd" id="1_80or2"]
 [ext_resource type="Texture2D" uid="uid://c2fqmlti1kc0f" path="res://Assets/CardTextures/Wind blast.png" id="1_s6k3a"]
 
 [resource]

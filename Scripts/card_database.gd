@@ -1,6 +1,6 @@
 extends Node
 
-@export var cards: Dictionary[String, CardTemplate] = {}
+@export var cards: Array[CardTemplate] = []
 
 func _ready() -> void:
 	_load_cards("res://Cards")
@@ -16,11 +16,8 @@ func _load_cards(path: String) -> void:
 	while file != "":
 		if file.ends_with(".tres"):
 			var card: CardTemplate = load(path + "/" + file)
-			cards[file.get_basename().to_lower()] = card
+			cards.push_front(card)
 		file = dir.get_next()
-
-func get_card(id: String) -> CardTemplate:
-	return cards.get(id)
 	
 func get_random_card() -> CardTemplate:
-	return cards.values().pick_random()
+	return cards.pick_random()

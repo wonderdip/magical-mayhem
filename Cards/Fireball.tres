@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CardTemplate" load_steps=3 format=3 uid="uid://wwwtynh38qlq"]
 
 [ext_resource type="Texture2D" uid="uid://dsyuaq12n0hel" path="res://Assets/CardTextures/Fire ball.png" id="1_x8xue"]
-[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://card_template.gd" id="2_6cj7c"]
+[ext_resource type="Script" uid="uid://dxbp03a55cebo" path="res://Scripts/card_template.gd" id="2_6cj7c"]
 
 [resource]
 script = ExtResource("2_6cj7c")

@@ -1,0 +1,82 @@
+[gd_scene load_steps=9 format=3 uid="uid://by7yopupguxum"]
+
+[ext_resource type="Script" uid="uid://dt24ick7yy8hh" path="res://Scripts/main.gd" id="1_6bp64"]
+[ext_resource type="PackedScene" uid="uid://bsrym2ob4rqra" path="res://Scenes/hand.tscn" id="2_344ge"]
+[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://Scripts/deck.gd" id="3_ynf5e"]
+[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="4_hptm8"]
+[ext_resource type="Script" uid="uid://ooxh4s44wy1e" path="res://Scripts/discard.gd" id="5_d1ilt"]
+[ext_resource type="Texture2D" uid="uid://b4jkaj23t7eq1" path="res://icon.svg" id="6_6iyac"]
+[ext_resource type="Script" uid="uid://pl4p53twu3h3" path="res://Scripts/play_zone.gd" id="7_fdnlq"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7mycd"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
+[node name="main" type="Node2D"]
+script = ExtResource("1_6bp64")
+
+[node name="Hand" parent="." instance=ExtResource("2_344ge")]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 11.0
+offset_top = 38.0
+offset_right = 19.0
+offset_bottom = 46.0
+text = "Draw Card"
+
+[node name="Deck" type="Node2D" parent="."]
+position = Vector2(36, 472)
+script = ExtResource("3_ynf5e")
+
+[node name="DeckSprite" type="TextureRect" parent="Deck"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 152.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_hptm8")
+expand_mode = 1
+
+[node name="Poptimer" type="Timer" parent="Deck"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Discard" type="Node2D" parent="."]
+position = Vector2(1092, 472)
+script = ExtResource("5_d1ilt")
+
+[node name="DiscardSprite" type="TextureRect" parent="Discard"]
+offset_right = 152.0
+offset_bottom = 208.0
+texture = ExtResource("6_6iyac")
+expand_mode = 1
+
+[node name="PlayZone" type="Node2D" parent="."]
+position = Vector2(526, 195)
+script = ExtResource("7_fdnlq")
+
+[node name="PlaySprite" type="TextureRect" parent="PlayZone"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -76.0
+offset_top = -104.0
+offset_right = 76.0
+offset_bottom = 104.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(76, 104)
+texture = SubResource("CompressedTexture2D_7mycd")
+expand_mode = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="gui_input" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_gui_input"]
+[connection signal="mouse_entered" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_entered"]
+[connection signal="mouse_exited" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_exited"]
+[connection signal="mouse_entered" from="Discard/DiscardSprite" to="Discard" method="_on_discard_sprite_mouse_entered"]
+[connection signal="mouse_exited" from="Discard/DiscardSprite" to="Discard" method="_on_discard_sprite_mouse_exited"]

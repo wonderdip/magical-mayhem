@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://ba82tsdvno7ke"]
 
-[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://deck.gd" id="1_f0yuw"]
-[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="2_rqxj1"]
+[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://Scripts/deck.gd" id="1_io7pv"]
+[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="2_nlncs"]
 
 [node name="Deck" type="Node2D"]
-script = ExtResource("1_f0yuw")
+script = ExtResource("1_io7pv")
 
 [node name="DeckSprite" type="TextureRect" parent="."]
 anchors_preset = 8
@@ -16,7 +16,7 @@ offset_right = 152.0
 offset_bottom = 208.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_rqxj1")
+texture = ExtResource("2_nlncs")
 expand_mode = 1
 
 [node name="Poptimer" type="Timer" parent="."]

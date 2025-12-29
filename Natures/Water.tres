@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Nature" load_steps=3 format=3 uid="uid://bh1w17yw2po51"]
+
+[ext_resource type="Script" uid="uid://wrcthoqcypfn" path="res://Scripts/Nature.gd" id="1_fag7q"]
+[ext_resource type="Texture2D" uid="uid://d1hho1jny2xu6" path="res://Assets/CardTextures/Hand of Water.png" id="2_o3i6i"]
+
+[resource]
+script = ExtResource("1_fag7q")
+nature = "Water"
+texture = ExtResource("2_o3i6i")
+metadata/_custom_type_script = "uid://wrcthoqcypfn"

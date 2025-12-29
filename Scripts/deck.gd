@@ -1,6 +1,6 @@
 extends Node2D
 
-signal draw_card
+signal draw_card(amount)
 
 @onready var deck_sprite: TextureRect = $DeckSprite
 @onready var poptimer: Timer = $Poptimer
@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 func _on_deck_sprite_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			draw_card.emit()
+			draw_card.emit(1)
 			drew_card = true
 			poptimer.start()
 

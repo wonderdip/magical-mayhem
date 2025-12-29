@@ -6,6 +6,7 @@ class_name Card
 @onready var title: Label = $Container/Title
 @onready var description: RichTextLabel = $Container/Description
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var select_timer: Timer = $SelectTimer
 
 @onready var fire_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/FireCost
 @onready var water_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/WaterCost
@@ -30,11 +31,18 @@ var hand: Node2D
 var base_z: int
 var hovering := false
 
+var selected: bool
+var played : bool
+
 # Smooth positioning
 var target_position := Vector2.ZERO
 var target_rotation := 0.0
 @export var lerp_speed := 15.0
 @export var hover_lift := 40.0
+
+var desc_text: String
+
+var card_stat: CardTemplate
 
 func _ready():
 	animation_player.play("card_flip")
@@ -51,10 +59,11 @@ func _ready():
 	
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
+	card_stat = stats
 	card_sprite.texture = stats.card_texture
 	title.text = stats.name
 	
-	var desc_text := stats.description
+	desc_text = stats.description
 	
 	var color = stats.nature_color_map.get(stats.Nature, Color.WHITE)
 	desc_text = desc_text.replace(
@@ -69,12 +78,17 @@ func _set_stats(stats: CardTemplate):
 		"(HEAL)",
 		"[color=green][b]%s[/b][/color]" % stats.heal
 	)
+	desc_text = desc_text.replace(
+		"(DRAW)",
+		"[color=black][b]%s[/b][/color]" % stats.draw_amount
+	)
 	description.text = desc_text
 	
 	_set_costs(fire_cost, stats.fire_cost, "fire")
 	_set_costs(water_cost, stats.water_cost, "water")
 	_set_costs(earth_cost, stats.earth_cost, "earth")
 	_set_costs(wind_cost, stats.wind_cost, "wind")
+	
 func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	var texture: Texture2D = nature_sprites.get(nature)
 	if texture == null:
@@ -111,6 +125,9 @@ func bbcode_color(color: Color, text: String) -> String:
 		text
 	]
 
+func play():
+	played = true
+
 func _process(delta: float) -> void:
 	if not is_inside_tree() or animation_player.current_animation == "discard":
 		return
@@ -121,6 +138,26 @@ func _process(delta: float) -> void:
 	mouse_over = rect.has_point(mouse_pos)
 	drag_offset = Vector2(size.x/2, size.y/2)
 	
+	if played:
+		if card_stat.discard_hand:
+			for card in hand.cards.duplicate():
+				hand.remove_card(card)
+		else:
+			for i in range(card_stat.discard_amount):
+				if hand.cards.is_empty():
+					break
+				hand.remove_card(hand.cards[0])
+				
+		for i in range(card_stat.draw_amount):
+			hand.add_card()
+		
+		
+		
+		
+		played = false
+		hand.remove_selected_card(self)
+		hand.remove_card(self)
+		
 	if dragging:
 		# Manual drag positioning
 		global_position = global_position.lerp(mouse_pos - drag_offset, lerp_speed * delta)
@@ -133,18 +170,28 @@ func _process(delta: float) -> void:
 		var can_hover = hand and not hand.is_dragging_card
 		var should_hover = mouse_over and is_topmost_card() and can_hover
 		
-		if should_hover:
-			# Hovering state
-			hovering = true
+		if selected and should_hover:
+			scale = scale.lerp(Vector2(1.05, 1.05), lerp_speed * delta)
 			var hover_pos := target_position + Vector2(0, -hover_lift)
 			global_position = global_position.lerp(hover_pos, lerp_speed * delta)
-			scale = scale.lerp(Vector2(1.1, 1.1), lerp_speed * delta)
+			rotation_degrees = lerp(rotation_degrees, 0.0, lerp_speed * delta)
+			
+		elif selected:
+			var hover_pos := target_position + Vector2(0, -hover_lift)
+			global_position = global_position.lerp(hover_pos, lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.0, 1.0), lerp_speed * delta)
+			rotation_degrees = lerp(rotation_degrees, 0.0, lerp_speed * delta)
+			
+		elif should_hover:
+			hovering = true
+			global_position = global_position.lerp(target_position, lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.05, 1.05), lerp_speed * delta)
+			
 		else:
-			# Normal state
 			hovering = false
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
-			scale = scale.lerp(Vector2(1, 1), lerp_speed * delta)
+			scale = scale.lerp(Vector2.ONE, lerp_speed * delta)
 
 func is_topmost_card() -> bool:
 	if not mouse_over or not hand:
@@ -163,31 +210,43 @@ func is_topmost_card() -> bool:
 	
 	return true
 
-func _input(event: InputEvent) -> void:
-	if not is_inside_tree() or not hand:
-		return
-	
+func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed and mouse_over and not dragging:
+		if event.pressed:
 			if not is_topmost_card():
 				return
+
+			mouse_over = true
+			select_timer.start()
+
+		else: # mouse released
+			if dragging:
+				dragging = false
+				hand.stop_dragging()
+				z_index = base_z
+
+			elif not select_timer.is_stopped():
+				# quick click → toggle select
+				if selected:
+					hand.remove_selected_card(self)
+				else:
+					hand.add_selected_card(self)
+			select_timer.stop()
 			
-			# Start dragging
-			dragging = true
-			hovering = false
-			drag_offset = global_position - get_global_mouse_position()
-			hand.start_dragging(self)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		for i in hand.selected_cards:
+			hand.remove_selected_card(i)
 			
-			# Bring to front
-			var max_z = base_z
-			for card in hand.cards:
-				if is_instance_valid(card):
-					max_z = max(max_z, card.z_index)
-			z_index = max_z + 1
-			
-			get_viewport().set_input_as_handled()
-			
-		elif not event.pressed and dragging:
-			dragging = false
-			hand.stop_dragging()
-			z_index = base_z
+func _on_select_timer_timeout():
+	# held long enough → drag
+	if mouse_over and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		dragging = true
+		drag_offset = global_position - get_global_mouse_position()
+		hand.start_dragging(self)
+
+		# bring to front
+		var max_z := base_z
+		for card in hand.cards:
+			if is_instance_valid(card):
+				max_z = max(max_z, card.z_index)
+		z_index = max_z + 1

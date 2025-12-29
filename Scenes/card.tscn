@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=3 uid="uid://80j1tuaoem6c"]
 
-[ext_resource type="Script" uid="uid://fujsi3nnbksy" path="res://card.gd" id="1_rjlel"]
-[ext_resource type="Texture2D" uid="uid://5jr3j23un7ca" path="res://Assets/CardTextures/BorderCardBg.png" id="2_e484p"]
-[ext_resource type="Texture2D" uid="uid://dsyuaq12n0hel" path="res://Assets/CardTextures/Fire ball.png" id="3_1i5pp"]
-[ext_resource type="FontFile" uid="uid://b2bfdtrxj4vgf" path="res://Assets/Fonts/Amika Blackletter Free Font.ttf" id="4_e484p"]
-[ext_resource type="FontFile" uid="uid://b3l3ca8hd6g3f" path="res://Assets/Fonts/Birds of Paradise ╕ PERSONAL USE ONLY.ttf" id="5_fpac0"]
-[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="6_1i5pp"]
+[ext_resource type="Script" uid="uid://fujsi3nnbksy" path="res://Scripts/card.gd" id="1_bnspj"]
+[ext_resource type="Texture2D" uid="uid://5jr3j23un7ca" path="res://Assets/CardTextures/BorderCardBg.png" id="2_xnv4g"]
+[ext_resource type="Texture2D" uid="uid://dsyuaq12n0hel" path="res://Assets/CardTextures/Fire ball.png" id="3_u5wvb"]
+[ext_resource type="FontFile" uid="uid://b2bfdtrxj4vgf" path="res://Assets/Fonts/Amika Blackletter Free Font.ttf" id="4_mm04k"]
+[ext_resource type="FontFile" uid="uid://b3l3ca8hd6g3f" path="res://Assets/Fonts/Birds of Paradise ╕ PERSONAL USE ONLY.ttf" id="5_yvxpl"]
+[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="6_uf1hq"]
 
 [sub_resource type="Animation" id="Animation_1i5pp"]
 length = 0.001
@@ -249,7 +249,8 @@ anchors_preset = 0
 offset_right = 152.0
 offset_bottom = 208.0
 pivot_offset = Vector2(76, 104)
-script = ExtResource("1_rjlel")
+script = ExtResource("1_bnspj")
+hover_lift = 80.0
 
 [node name="Container" type="Control" parent="."]
 modulate = Color(1, 1, 1, 0)
@@ -263,13 +264,13 @@ pivot_offset = Vector2(76, 104)
 layout_mode = 0
 offset_right = 152.0
 offset_bottom = 208.0
-texture = ExtResource("2_e484p")
+texture = ExtResource("2_xnv4g")
 expand_mode = 1
 
 [node name="CardSprite" type="Sprite2D" parent="Container"]
-position = Vector2(76, 95)
+position = Vector2(76, 89)
 scale = Vector2(0.04, 0.04)
-texture = ExtResource("3_1i5pp")
+texture = ExtResource("3_u5wvb")
 
 [node name="Title" type="Label" parent="Container"]
 layout_mode = 0
@@ -278,22 +279,23 @@ offset_top = 7.9999924
 offset_right = 147.0
 offset_bottom = 32.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("4_e484p")
+theme_override_fonts/font = ExtResource("4_mm04k")
 theme_override_font_sizes/font_size = 20
 text = "Title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Description" type="RichTextLabel" parent="Container"]
+clip_contents = false
 layout_mode = 0
 offset_left = 9.0
-offset_top = 152.0
+offset_top = 136.0
 offset_right = 143.0
-offset_bottom = 199.0
+offset_bottom = 200.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
-theme_override_fonts/normal_font = ExtResource("5_fpac0")
+theme_override_fonts/normal_font = ExtResource("5_yvxpl")
 bbcode_enabled = true
-text = "six seven"
+text = "Deal"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Container"]
 layout_mode = 0
@@ -315,6 +317,7 @@ theme_override_constants/separation = 2
 [node name="WaterCost" type="HBoxContainer" parent="Container/HBoxContainer/LeftCost"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="RightCost" type="VBoxContainer" parent="Container/HBoxContainer"]
 layout_mode = 2
@@ -322,10 +325,12 @@ layout_mode = 2
 [node name="WindCost" type="HBoxContainer" parent="Container/HBoxContainer/RightCost"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="EarthCost" type="HBoxContainer" parent="Container/HBoxContainer/RightCost"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -346,5 +351,12 @@ offset_bottom = 104.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(76, 104)
-texture = ExtResource("6_1i5pp")
+texture = ExtResource("6_uf1hq")
 expand_mode = 1
+
+[node name="SelectTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+ignore_time_scale = true
+
+[connection signal="timeout" from="SelectTimer" to="." method="_on_select_timer_timeout"]

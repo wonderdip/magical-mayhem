@@ -17,7 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-CardDatabase="*res://card_database.gd"
+CardDatabase="*res://Scripts/card_database.gd"
+WizardDatabase="*res://Scripts/wizard_database.gd"
+PhaseManager="*res://Scripts/PhaseManager.gd"
 
 [display]
 
