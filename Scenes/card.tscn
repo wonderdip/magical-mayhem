@@ -256,31 +256,30 @@ hover_lift = 80.0
 modulate = Color(1, 1, 1, 0)
 z_index = -1
 anchors_preset = 0
-offset_right = 152.0
-offset_bottom = 208.0
-pivot_offset = Vector2(76, 104)
+offset_right = 228.0
+offset_bottom = 312.0
+pivot_offset = Vector2(114, 156)
 
 [node name="BGSprite" type="TextureRect" parent="Container"]
 layout_mode = 0
-offset_right = 152.0
-offset_bottom = 208.0
+offset_right = 228.0
+offset_bottom = 312.0
 texture = ExtResource("2_xnv4g")
 expand_mode = 1
 
 [node name="CardSprite" type="Sprite2D" parent="Container"]
-position = Vector2(76, 89)
-scale = Vector2(0.04, 0.04)
+position = Vector2(114, 143)
+scale = Vector2(0.08, 0.076)
 texture = ExtResource("3_u5wvb")
 
 [node name="Title" type="Label" parent="Container"]
 layout_mode = 0
-offset_left = 5.0
-offset_top = 7.9999924
-offset_right = 147.0
-offset_bottom = 32.0
+offset_top = 12.0
+offset_right = 228.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("4_mm04k")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 30
 text = "Title"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -288,46 +287,48 @@ vertical_alignment = 1
 [node name="Description" type="RichTextLabel" parent="Container"]
 clip_contents = false
 layout_mode = 0
-offset_left = 9.0
-offset_top = 136.0
-offset_right = 143.0
-offset_bottom = 200.0
+offset_left = 16.0
+offset_top = 232.0
+offset_right = 216.0
+offset_bottom = 304.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("5_yvxpl")
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 text = "Deal"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Container"]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 32.0
-offset_right = 144.0
-offset_bottom = 48.0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 20.0
+offset_bottom = 76.0
 theme_override_constants/separation = 8
 
-[node name="LeftCost" type="VBoxContainer" parent="Container/HBoxContainer"]
+[node name="LeftContainer" type="VBoxContainer" parent="Container/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="FireCost" type="HBoxContainer" parent="Container/HBoxContainer/LeftCost"]
+[node name="FireContainer" type="HBoxContainer" parent="Container/HBoxContainer/LeftContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="WaterCost" type="HBoxContainer" parent="Container/HBoxContainer/LeftCost"]
+[node name="WaterContainer" type="HBoxContainer" parent="Container/HBoxContainer/LeftContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="RightCost" type="VBoxContainer" parent="Container/HBoxContainer"]
+[node name="RightContainer" type="VBoxContainer" parent="Container/HBoxContainer"]
 layout_mode = 2
 
-[node name="WindCost" type="HBoxContainer" parent="Container/HBoxContainer/RightCost"]
+[node name="WindContainer" type="HBoxContainer" parent="Container/HBoxContainer/RightContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="EarthCost" type="HBoxContainer" parent="Container/HBoxContainer/RightCost"]
+[node name="EarthContainer" type="HBoxContainer" parent="Container/HBoxContainer/RightContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
@@ -346,11 +347,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -76.0
 offset_top = -104.0
-offset_right = 76.0
-offset_bottom = 104.0
+offset_right = 152.0
+offset_bottom = 208.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(76, 104)
+pivot_offset = Vector2(114, 156)
 texture = ExtResource("6_uf1hq")
 expand_mode = 1
 

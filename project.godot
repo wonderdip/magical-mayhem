@@ -20,9 +20,13 @@ config/icon="res://icon.svg"
 CardDatabase="*res://Scripts/card_database.gd"
 WizardDatabase="*res://Scripts/wizard_database.gd"
 PhaseManager="*res://Scripts/PhaseManager.gd"
+Natures="*res://Scripts/natures.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/size/resizable=false
 window/stretch/mode="canvas_items"
+window/stretch/aspect="ignore"

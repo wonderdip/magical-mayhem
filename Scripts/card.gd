@@ -8,13 +8,13 @@ class_name Card
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var select_timer: Timer = $SelectTimer
 
-@onready var fire_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/FireCost
-@onready var water_cost: HBoxContainer = $Container/HBoxContainer/LeftCost/WaterCost
-@onready var wind_cost: HBoxContainer = $Container/HBoxContainer/RightCost/WindCost
-@onready var earth_cost: HBoxContainer = $Container/HBoxContainer/RightCost/EarthCost
+@onready var fire_container: HBoxContainer = $Container/HBoxContainer/LeftContainer/FireContainer
+@onready var water_container: HBoxContainer = $Container/HBoxContainer/LeftContainer/WaterContainer
+@onready var wind_container: HBoxContainer = $Container/HBoxContainer/RightContainer/WindContainer
+@onready var earth_container: HBoxContainer = $Container/HBoxContainer/RightContainer/EarthContainer
 
-@onready var left_cost: VBoxContainer = $Container/HBoxContainer/LeftCost
-@onready var right_cost: VBoxContainer = $Container/HBoxContainer/RightCost
+@onready var left_container: VBoxContainer = $Container/HBoxContainer/LeftContainer
+@onready var right_container: VBoxContainer = $Container/HBoxContainer/RightContainer
 
 var nature_sprites := {
 	"fire": preload("res://Assets/Nature Sprites/fire icon.png"),
@@ -22,7 +22,6 @@ var nature_sprites := {
 	"wind": preload("res://Assets/Nature Sprites/wind icon.png"),
 	"earth": preload("res://Assets/Nature Sprites/earth icon.png")
 }
-
 
 var dragging := false
 var drag_offset := Vector2.ZERO
@@ -50,12 +49,12 @@ func _ready():
 	base_z = z_index
 	pivot_offset = size * 0.5
 	
-	left_cost.hide()
-	right_cost.hide()
-	fire_cost.hide()
-	water_cost.hide()
-	wind_cost.hide()
-	earth_cost.hide()
+	left_container.hide()
+	right_container.hide()
+	fire_container.hide()
+	water_container.hide()
+	wind_container.hide()
+	earth_container.hide()
 	
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
@@ -84,10 +83,10 @@ func _set_stats(stats: CardTemplate):
 	)
 	description.text = desc_text
 	
-	_set_costs(fire_cost, stats.fire_cost, "fire")
-	_set_costs(water_cost, stats.water_cost, "water")
-	_set_costs(earth_cost, stats.earth_cost, "earth")
-	_set_costs(wind_cost, stats.wind_cost, "wind")
+	_set_costs(fire_container, stats.fire_cost, "fire")
+	_set_costs(water_container, stats.water_cost, "water")
+	_set_costs(earth_container, stats.earth_cost, "earth")
+	_set_costs(wind_container, stats.wind_cost, "wind")
 	
 func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	var texture: Texture2D = nature_sprites.get(nature)
@@ -100,24 +99,23 @@ func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 		
 		match nature:
 			"fire":
-				icon.custom_minimum_size = Vector2(10.18, 14)
-				fire_cost.show()
-				left_cost.show()
+				icon.custom_minimum_size = Vector2(13, 18) #0.72
+				fire_container.show()
+				left_container.show()
 			"water":
-				icon.custom_minimum_size = Vector2(7.56, 14)
-				water_cost.show()
-				left_cost.show()
+				icon.custom_minimum_size = Vector2(10.08, 18) #0.56
+				water_container.show()
+				left_container.show()
 			"earth":
-				icon.custom_minimum_size = Vector2(19.18, 14)
-				earth_cost.show()
-				right_cost.show()
+				icon.custom_minimum_size = Vector2(26.27, 18) #1.37
+				earth_container.show()
+				right_container.show()
 			"wind":
-				icon.custom_minimum_size = Vector2(17.78, 14)
-				wind_cost.show()
-				right_cost.show()
+				icon.custom_minimum_size = Vector2(22.86, 18) #1.27
+				wind_container.show()
+				right_container.show()
 		icon.texture = texture
 		container.add_child(icon)
-		
 		
 func bbcode_color(color: Color, text: String) -> String:
 	return "[color=#%s][b]%s[/b][/color]" % [
@@ -151,9 +149,6 @@ func _process(delta: float) -> void:
 		for i in range(card_stat.draw_amount):
 			hand.add_card()
 		
-		
-		
-		
 		played = false
 		hand.remove_selected_card(self)
 		hand.remove_card(self)
@@ -186,7 +181,7 @@ func _process(delta: float) -> void:
 			hovering = true
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
 			scale = scale.lerp(Vector2(1.05, 1.05), lerp_speed * delta)
-			
+			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
 		else:
 			hovering = false
 			global_position = global_position.lerp(target_position, lerp_speed * delta)

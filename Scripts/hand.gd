@@ -1,14 +1,15 @@
 extends Node2D
 
-@export var hand_center := Vector2(640, 480)
-@export var hand_width := 640.0
+@export var hand_center := Vector2(960, 740)
+@export var hand_width := 960.0
 @export var hand_curve := 140.0
-@export var card_spacing := 100.0
+@export var card_spacing := 150.0
 @export var max_rotation := 15.0
 
 @onready var curve: Line2D =  $HandCurve
 @onready var deck: Node2D = $"../Deck"
 @onready var discard: Node2D = $"../Discard"
+@onready var natures: Node2D = $"../Natures"
 
 @export var min_hand_width := 160.0
 @export var max_cards := 10
@@ -26,10 +27,10 @@ func add_card() -> void:
 	var card = new_card.instantiate()
 	
 	if cards.size() <= max_handsize:
-		card.global_position = deck.global_position
 		card.z_index = cards.size()
 		deck.z_index = card.z_index + 1
 		add_child(card)
+		card.global_position = deck.global_position
 		cards.append(card)
 		card.hand = self
 		card._set_stats(CardDatabase.get_random_card())
@@ -39,7 +40,7 @@ func remove_card(card: Card) -> void:
 	if card in cards:
 		cards.erase(card)
 		card.animation_player.play("discard")
-		card.global_position = discard.global_position
+		card.global_position = card.global_position.lerp(discard.global_position, 10 * get_process_delta_time()) 
 		await card.animation_player.animation_finished
 		card.queue_free()
 	update_hand()
@@ -60,8 +61,19 @@ func remove_selected_card(card: Card) -> void:
 
 func play_cards():
 	for card in selected_cards:
-		card.play()
-		
+		if (
+			Natures.fire_natures >= card.card_stat.fire_cost
+			and Natures.water_natures >= card.card_stat.water_cost
+			and Natures.wind_natures >= card.card_stat.wind_cost
+			and Natures.earth_natures >= card.card_stat.earth_cost
+		):
+			card.play()
+			Natures.fire_natures -= card.card_stat.fire_cost
+			Natures.water_natures -= card.card_stat.water_cost
+			Natures.wind_natures -= card.card_stat.wind_cost
+			Natures.earth_natures -= card.card_stat.earth_cost
+			natures.change_labels()
+			
 func update_hand() -> void:
 	var count := cards.size()
 	if count == 0:
