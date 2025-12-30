@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://by7yopupguxum"]
+[gd_scene load_steps=16 format=3 uid="uid://by7yopupguxum"]
 
 [ext_resource type="Script" uid="uid://dt24ick7yy8hh" path="res://Scripts/main.gd" id="1_6bp64"]
 [ext_resource type="PackedScene" uid="uid://bsrym2ob4rqra" path="res://Scenes/hand.tscn" id="2_344ge"]
@@ -10,8 +10,20 @@
 [ext_resource type="Script" uid="uid://c0n46wp30c8t" path="res://Scripts/nature_container.gd" id="8_6iyac"]
 [ext_resource type="Texture2D" uid="uid://b6lsbf5unofnq" path="res://Assets/CardTextures/Hand of Fire.png" id="8_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://d1hho1jny2xu6" path="res://Assets/CardTextures/Hand of Water.png" id="9_6iyac"]
+[ext_resource type="Shader" uid="uid://2ipl2teh3d20" path="res://Shaders/dissolve.gdshader" id="9_fdnlq"]
 [ext_resource type="Texture2D" uid="uid://cuxgskcus630o" path="res://Assets/CardTextures/Hand of wind.png" id="10_fdnlq"]
 [ext_resource type="Texture2D" uid="uid://bok02lqq8ysgf" path="res://Assets/CardTextures/Hand of Earth.png" id="11_jkdf5"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jkdf5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wsu2k"]
+shader = ExtResource("9_fdnlq")
+shader_parameter/position = Vector2(0, 0)
+shader_parameter/radius = 0.0
+shader_parameter/borderWidth = 0.02
+shader_parameter/burnMult = 0.135
+shader_parameter/noiseTexture = SubResource("NoiseTexture2D_jkdf5")
+shader_parameter/burnColor = Color(0, 0, 0, 1)
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_6bp64")
@@ -61,7 +73,7 @@ offset_right = 978.0
 offset_bottom = 680.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Play Cards"
+text = "Play"
 
 [node name="Wizard" parent="." instance=ExtResource("7_6bp64")]
 
@@ -110,6 +122,7 @@ pivot_offset = Vector2(366, 133)
 layout_mode = 2
 
 [node name="FireTexture" type="TextureRect" parent="Natures/NatureContainer/FireContainer"]
+material = SubResource("ShaderMaterial_wsu2k")
 custom_minimum_size = Vector2(180, 240)
 layout_mode = 2
 texture = ExtResource("8_d1ilt")

@@ -1,5 +1,4 @@
-extends Node2D
-
+extends Node
 
 var fire_natures := 0
 var water_natures := 0

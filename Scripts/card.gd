@@ -16,6 +16,8 @@ class_name Card
 @onready var left_container: VBoxContainer = $Container/HBoxContainer/LeftContainer
 @onready var right_container: VBoxContainer = $Container/HBoxContainer/RightContainer
 
+@onready var card_container: Control = $Container
+
 var nature_sprites := {
 	"fire": preload("res://Assets/Nature Sprites/fire icon.png"),
 	"water": preload("res://Assets/Nature Sprites/water icon.png"),
@@ -32,6 +34,7 @@ var hovering := false
 
 var selected: bool
 var played : bool
+var discarded: bool = false
 
 # Smooth positioning
 var target_position := Vector2.ZERO
@@ -42,6 +45,7 @@ var target_rotation := 0.0
 var desc_text: String
 
 var card_stat: CardTemplate
+
 
 func _ready():
 	animation_player.play("card_flip")
@@ -125,16 +129,6 @@ func bbcode_color(color: Color, text: String) -> String:
 
 func play():
 	played = true
-
-func _process(delta: float) -> void:
-	if not is_inside_tree() or animation_player.current_animation == "discard":
-		return
-	
-	# Check if mouse is over card
-	var mouse_pos = get_global_mouse_position()
-	var rect = Rect2(global_position, size)
-	mouse_over = rect.has_point(mouse_pos)
-	drag_offset = Vector2(size.x/2, size.y/2)
 	
 	if played:
 		if card_stat.discard_hand:
@@ -145,13 +139,44 @@ func _process(delta: float) -> void:
 				if hand.cards.is_empty():
 					break
 				hand.remove_card(hand.cards[0])
-				
-		for i in range(card_stat.draw_amount):
-			hand.add_card()
+		hand.add_card(card_stat.draw_amount)
 		
-		played = false
-		hand.remove_selected_card(self)
-		hand.remove_card(self)
+	played = false
+	hand.remove_selected_card(self)
+	hand.remove_card(self)
+		
+func cant_play() -> void:
+	played = false
+	animation_player.play("cant_play")
+
+func burn_card() -> void:
+	if material is ShaderMaterial:
+		print("I HAVE A SHADER")
+		var mat := material as ShaderMaterial
+
+		mat.set_shader_parameter(
+			"position",
+			Vector2(randf(), randf()) # UV space
+		)
+
+		var tween := create_tween()
+		tween.tween_property(
+			mat,
+			"shader_parameter/radius",
+			0.6,
+			1.5
+		)
+
+func _process(delta: float) -> void:
+	if not is_inside_tree() or discarded:
+		return
+	
+	# Check if mouse is over card
+	var mouse_pos = get_global_mouse_position()
+	var rect = Rect2(global_position, size)
+	mouse_over = rect.has_point(mouse_pos)
+	drag_offset = Vector2(size.x/2, size.y/2)
+		
 		
 	if dragging:
 		# Manual drag positioning

@@ -24,10 +24,12 @@ func _ready() -> void:
 func _play_card():
 	hand.play_cards()
 	
-func _spawn_card(amount: int):
-	for i in range(amount):
-		hand.add_card()
+var is_drawing := false
+var draw_queue: int = 0
 
+func _spawn_card(amount: int) -> void:
+	hand.add_card(amount)
+		
 func _discard_card(dragged_card: Card):
 	if hand.cards.size() > 0:
 		hand.stop_dragging()

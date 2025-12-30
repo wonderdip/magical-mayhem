@@ -14,6 +14,7 @@ extends Node2D
 @export var min_hand_width := 160.0
 @export var max_cards := 10
 @export var max_handsize: int = 20
+@export var draw_delay: float = 0.25
 
 var cards: Array[Card] = []
 var is_dragging_card := false
@@ -22,19 +23,44 @@ var dragged_card_original_index: int = -1
 
 var selected_cards: Array[Card] = []
 
-func add_card() -> void:
-	var new_card = preload("res://Scenes/card.tscn")
-	var card = new_card.instantiate()
+var _draw_queue: int = 0
+var _is_drawing: bool = false
+
+func add_card(amount: int = 1) -> void:
+	if amount <= 0:
+		return
+		
+	_draw_queue += amount
+	if not _is_drawing:
+		_process_draw_queue()
+		
+func _process_draw_queue() -> void:
+	_is_drawing = true
+
+	while _draw_queue > 0:
+		if cards.size() >= max_handsize:
+			break
+
+		_spawn_single_card()
+		_draw_queue -= 1
+		await get_tree().create_timer(draw_delay).timeout
+	_is_drawing = false
 	
-	if cards.size() <= max_handsize:
-		card.z_index = cards.size()
-		deck.z_index = card.z_index + 1
-		add_child(card)
-		card.global_position = deck.global_position
-		cards.append(card)
-		card.hand = self
-		card._set_stats(CardDatabase.get_random_card())
-		update_hand()
+func _spawn_single_card() -> void:
+	var card_scene := preload("res://Scenes/card.tscn")
+	var card: Card = card_scene.instantiate()
+
+	card.z_index = cards.size()
+	deck.z_index = card.z_index + 1
+
+	add_child(card)
+	card.global_position = deck.global_position
+
+	cards.append(card)
+	card.hand = self
+	card._set_stats(CardDatabase.get_random_card())
+
+	update_hand()
 	
 func remove_card(card: Card) -> void:
 	if card not in cards:
@@ -47,15 +73,15 @@ func remove_card(card: Card) -> void:
 		discard.global_position,
 		0.5
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	
 	await tween.finished
-
-	card.animation_player.play("discard")
-	await card.animation_player.animation_finished
-
-	card.queue_free()
+	card.burn_card()
+	card.discarded = true
+	#card.animation_player.play("discard")
+	#await card.animation_player.animation_finished
+	#card.queue_free()
 	update_hand()
-
-
+	
 func add_selected_card(card: Card) -> void:
 	if card in selected_cards:
 		return
@@ -84,7 +110,8 @@ func play_cards():
 			Natures.wind_natures -= card.card_stat.wind_cost
 			Natures.earth_natures -= card.card_stat.earth_cost
 			natures.change_labels()
-			
+		else:
+			card.cant_play()
 func update_hand() -> void:
 	var count := cards.size()
 	if count == 0:

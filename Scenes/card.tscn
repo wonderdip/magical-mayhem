@@ -1,11 +1,27 @@
-[gd_scene load_steps=11 format=3 uid="uid://80j1tuaoem6c"]
+[gd_scene load_steps=16 format=3 uid="uid://80j1tuaoem6c"]
 
 [ext_resource type="Script" uid="uid://fujsi3nnbksy" path="res://Scripts/card.gd" id="1_bnspj"]
+[ext_resource type="Shader" uid="uid://2ipl2teh3d20" path="res://Shaders/dissolve.gdshader" id="1_xnv4g"]
 [ext_resource type="Texture2D" uid="uid://5jr3j23un7ca" path="res://Assets/CardTextures/BorderCardBg.png" id="2_xnv4g"]
 [ext_resource type="Texture2D" uid="uid://dsyuaq12n0hel" path="res://Assets/CardTextures/Fire ball.png" id="3_u5wvb"]
 [ext_resource type="FontFile" uid="uid://b2bfdtrxj4vgf" path="res://Assets/Fonts/Amika Blackletter Free Font.ttf" id="4_mm04k"]
 [ext_resource type="FontFile" uid="uid://b3l3ca8hd6g3f" path="res://Assets/Fonts/Birds of Paradise ╕ PERSONAL USE ONLY.ttf" id="5_yvxpl"]
 [ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="6_uf1hq"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xnv4g"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xnv4g"]
+noise = SubResource("FastNoiseLite_xnv4g")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5wvb"]
+shader = ExtResource("1_xnv4g")
+shader_parameter/position = Vector2(0, 0)
+shader_parameter/radius = 0.0
+shader_parameter/borderWidth = 0.02
+shader_parameter/burnMult = 0.135
+shader_parameter/noiseTexture = SubResource("NoiseTexture2D_xnv4g")
+shader_parameter/burnColor = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_1i5pp"]
 length = 0.001
@@ -112,6 +128,18 @@ tracks/8/path = NodePath(".:rotation")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Container:rotation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -235,20 +263,49 @@ tracks/2/keys = {
 "values": [0.0, 12.566371]
 }
 
+[sub_resource type="Animation" id="Animation_bnspj"]
+resource_name = "cant_play"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.63600004, 0.58000004, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Container:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.06981317007977318, -0.06981317007977318, 0.0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b4rk6"]
 _data = {
 &"RESET": SubResource("Animation_1i5pp"),
+&"cant_play": SubResource("Animation_bnspj"),
 &"card_flip": SubResource("Animation_pjytt"),
 &"discard": SubResource("Animation_b4rk6")
 }
 
 [node name="Card" type="Control"]
-custom_minimum_size = Vector2(152, 208)
+material = SubResource("ShaderMaterial_u5wvb")
 layout_mode = 3
 anchors_preset = 0
-offset_right = 152.0
-offset_bottom = 208.0
-pivot_offset = Vector2(76, 104)
+offset_right = 228.0
+offset_bottom = 312.0
 script = ExtResource("1_bnspj")
 hover_lift = 80.0
 
@@ -264,6 +321,7 @@ pivot_offset = Vector2(114, 156)
 layout_mode = 0
 offset_right = 228.0
 offset_bottom = 312.0
+pivot_offset = Vector2(114, 156)
 texture = ExtResource("2_xnv4g")
 expand_mode = 1
 
@@ -345,10 +403,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -76.0
-offset_top = -104.0
-offset_right = 152.0
-offset_bottom = 208.0
+offset_left = -114.0
+offset_top = -156.0
+offset_right = 114.0
+offset_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(114, 156)
