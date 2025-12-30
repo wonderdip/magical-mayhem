@@ -1,22 +1,25 @@
 extends Control
 class_name Card
 
-@onready var card_sprite: Sprite2D = $Container/CardSprite
-@onready var bg_sprite: TextureRect = $Container/BGSprite
-@onready var title: Label = $Container/Title
-@onready var description: RichTextLabel = $Container/Description
+
+@onready var card_container: Control = $CardContainer
+@onready var bg_sprite: TextureRect = $CardContainer/BGSprite
+@onready var card_sprite: Sprite2D = $CardContainer/CardSprite
+@onready var title: Label = $CardContainer/Title
+@onready var description: RichTextLabel = $CardContainer/Description
+
+@onready var cost_container: HBoxContainer = $CardContainer/CostContainer
+
+@onready var left_container: VBoxContainer = $CardContainer/CostContainer/LeftContainer
+@onready var fire_container: HBoxContainer = $CardContainer/CostContainer/LeftContainer/FireContainer
+@onready var water_container: HBoxContainer = $CardContainer/CostContainer/LeftContainer/WaterContainer
+@onready var right_container: VBoxContainer = $CardContainer/CostContainer/RightContainer
+@onready var wind_container: HBoxContainer = $CardContainer/CostContainer/RightContainer/WindContainer
+@onready var earth_container: HBoxContainer = $CardContainer/CostContainer/RightContainer/EarthContainer
+
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var deck_sprite: TextureRect = $DeckSprite
 @onready var select_timer: Timer = $SelectTimer
-
-@onready var fire_container: HBoxContainer = $Container/HBoxContainer/LeftContainer/FireContainer
-@onready var water_container: HBoxContainer = $Container/HBoxContainer/LeftContainer/WaterContainer
-@onready var wind_container: HBoxContainer = $Container/HBoxContainer/RightContainer/WindContainer
-@onready var earth_container: HBoxContainer = $Container/HBoxContainer/RightContainer/EarthContainer
-
-@onready var left_container: VBoxContainer = $Container/HBoxContainer/LeftContainer
-@onready var right_container: VBoxContainer = $Container/HBoxContainer/RightContainer
-
-@onready var card_container: Control = $Container
 
 var nature_sprites := {
 	"fire": preload("res://Assets/Nature Sprites/fire icon.png"),
@@ -59,6 +62,9 @@ func _ready():
 	water_container.hide()
 	wind_container.hide()
 	earth_container.hide()
+	cost_container.use_parent_material = true
+	left_container.use_parent_material = true
+	right_container.use_parent_material = true
 	
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
@@ -93,6 +99,8 @@ func _set_stats(stats: CardTemplate):
 	_set_costs(wind_container, stats.wind_cost, "wind")
 	
 func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
+	container.use_parent_material = true
+	
 	var texture: Texture2D = nature_sprites.get(nature)
 	if texture == null:
 		return
@@ -100,6 +108,7 @@ func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	for i in amount:
 		var icon := TextureRect.new()
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.use_parent_material = true
 		
 		match nature:
 			"fire":
@@ -148,25 +157,21 @@ func play():
 func cant_play() -> void:
 	played = false
 	animation_player.play("cant_play")
-
+	
 func burn_card() -> void:
 	if material is ShaderMaterial:
-		print("I HAVE A SHADER")
 		var mat := material as ShaderMaterial
-
-		mat.set_shader_parameter(
-			"position",
-			Vector2(randf(), randf()) # UV space
-		)
-
+		
+		# Set starting position (center of card in UV space)
+		mat.set_shader_parameter("position", Vector2(randf_range(0.0, 1.0), randf_range(0.0, 1.0)))
+		mat.set_shader_parameter("radius", 0.0)
+		
 		var tween := create_tween()
-		tween.tween_property(
-			mat,
-			"shader_parameter/radius",
-			0.6,
-			1.5
-		)
-
+		tween.tween_property(mat, "shader_parameter/radius", 1.5, 1.0)
+		
+		await tween.finished
+		queue_free()
+		
 func _process(delta: float) -> void:
 	if not is_inside_tree() or discarded:
 		return

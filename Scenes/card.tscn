@@ -10,18 +10,19 @@
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_xnv4g"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xnv4g"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u5wvb"]
 noise = SubResource("FastNoiseLite_xnv4g")
 seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5wvb"]
+resource_local_to_scene = true
 shader = ExtResource("1_xnv4g")
 shader_parameter/position = Vector2(0, 0)
 shader_parameter/radius = 0.0
 shader_parameter/borderWidth = 0.02
 shader_parameter/burnMult = 0.135
-shader_parameter/noiseTexture = SubResource("NoiseTexture2D_xnv4g")
-shader_parameter/burnColor = Color(0, 0, 0, 1)
+shader_parameter/noiseTexture = SubResource("NoiseTexture2D_u5wvb")
+shader_parameter/burnColor = Color(0.73, 0.42340004, 0.2701, 1)
 
 [sub_resource type="Animation" id="Animation_1i5pp"]
 length = 0.001
@@ -40,7 +41,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Container:z_index")
+tracks/1/path = NodePath("CardContainer:z_index")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -52,7 +53,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Container:scale")
+tracks/2/path = NodePath("CardContainer:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -76,7 +77,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Container:modulate")
+tracks/4/path = NodePath("CardContainer:modulate")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -136,7 +137,7 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("Container:rotation")
+tracks/9/path = NodePath("CardContainer:rotation")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
@@ -144,6 +145,35 @@ tracks/9/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_bnspj"]
+resource_name = "cant_play"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CardContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.63600004, 0.58000004, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CardContainer:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.06981317007977318, -0.06981317007977318, 0.0]
 }
 
 [sub_resource type="Animation" id="Animation_pjytt"]
@@ -164,7 +194,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Container:z_index")
+tracks/1/path = NodePath("CardContainer:z_index")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -176,7 +206,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Container:scale")
+tracks/2/path = NodePath("CardContainer:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -200,7 +230,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Container:modulate")
+tracks/4/path = NodePath("CardContainer:modulate")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -263,35 +293,6 @@ tracks/2/keys = {
 "values": [0.0, 12.566371]
 }
 
-[sub_resource type="Animation" id="Animation_bnspj"]
-resource_name = "cant_play"
-length = 0.3
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Container:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.15, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 0.63600004, 0.58000004, 1), Color(1, 1, 1, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Container:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.06981317007977318, -0.06981317007977318, 0.0]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b4rk6"]
 _data = {
 &"RESET": SubResource("Animation_1i5pp"),
@@ -309,15 +310,17 @@ offset_bottom = 312.0
 script = ExtResource("1_bnspj")
 hover_lift = 80.0
 
-[node name="Container" type="Control" parent="."]
+[node name="CardContainer" type="Control" parent="."]
 modulate = Color(1, 1, 1, 0)
 z_index = -1
+use_parent_material = true
 anchors_preset = 0
 offset_right = 228.0
 offset_bottom = 312.0
 pivot_offset = Vector2(114, 156)
 
-[node name="BGSprite" type="TextureRect" parent="Container"]
+[node name="BGSprite" type="TextureRect" parent="CardContainer"]
+use_parent_material = true
 layout_mode = 0
 offset_right = 228.0
 offset_bottom = 312.0
@@ -325,12 +328,14 @@ pivot_offset = Vector2(114, 156)
 texture = ExtResource("2_xnv4g")
 expand_mode = 1
 
-[node name="CardSprite" type="Sprite2D" parent="Container"]
+[node name="CardSprite" type="Sprite2D" parent="CardContainer"]
+use_parent_material = true
 position = Vector2(114, 143)
 scale = Vector2(0.08, 0.076)
 texture = ExtResource("3_u5wvb")
 
-[node name="Title" type="Label" parent="Container"]
+[node name="Title" type="Label" parent="CardContainer"]
+use_parent_material = true
 layout_mode = 0
 offset_top = 12.0
 offset_right = 228.0
@@ -342,7 +347,8 @@ text = "Title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="RichTextLabel" parent="Container"]
+[node name="Description" type="RichTextLabel" parent="CardContainer"]
+use_parent_material = true
 clip_contents = false
 layout_mode = 0
 offset_left = 16.0
@@ -356,37 +362,37 @@ theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 text = "Deal"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Container"]
+[node name="CostContainer" type="HBoxContainer" parent="CardContainer"]
+use_parent_material = true
 layout_mode = 0
 offset_left = 12.0
 offset_top = 56.0
 offset_right = 20.0
 offset_bottom = 76.0
-theme_override_constants/separation = 8
 
-[node name="LeftContainer" type="VBoxContainer" parent="Container/HBoxContainer"]
+[node name="LeftContainer" type="VBoxContainer" parent="CardContainer/CostContainer"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="FireContainer" type="HBoxContainer" parent="Container/HBoxContainer/LeftContainer"]
+[node name="FireContainer" type="HBoxContainer" parent="CardContainer/CostContainer/LeftContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="WaterContainer" type="HBoxContainer" parent="Container/HBoxContainer/LeftContainer"]
+[node name="WaterContainer" type="HBoxContainer" parent="CardContainer/CostContainer/LeftContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="RightContainer" type="VBoxContainer" parent="Container/HBoxContainer"]
+[node name="RightContainer" type="VBoxContainer" parent="CardContainer/CostContainer"]
 layout_mode = 2
 
-[node name="WindContainer" type="HBoxContainer" parent="Container/HBoxContainer/RightContainer"]
+[node name="WindContainer" type="HBoxContainer" parent="CardContainer/CostContainer/RightContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="EarthContainer" type="HBoxContainer" parent="Container/HBoxContainer/RightContainer"]
+[node name="EarthContainer" type="HBoxContainer" parent="CardContainer/CostContainer/RightContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 theme_override_constants/separation = 2

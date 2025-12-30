@@ -66,6 +66,8 @@ func remove_card(card: Card) -> void:
 	if card not in cards:
 		return
 	cards.erase(card)
+	card.discarded = true
+	
 	var tween := get_tree().create_tween()
 	tween.tween_property(
 		card,
@@ -76,10 +78,6 @@ func remove_card(card: Card) -> void:
 	
 	await tween.finished
 	card.burn_card()
-	card.discarded = true
-	#card.animation_player.play("discard")
-	#await card.animation_player.animation_finished
-	#card.queue_free()
 	update_hand()
 	
 func add_selected_card(card: Card) -> void:
