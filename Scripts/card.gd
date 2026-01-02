@@ -62,9 +62,6 @@ func _ready():
 	water_container.hide()
 	wind_container.hide()
 	earth_container.hide()
-	cost_container.use_parent_material = true
-	left_container.use_parent_material = true
-	right_container.use_parent_material = true
 	
 func _set_stats(stats: CardTemplate):
 	self.name = stats.name
@@ -99,7 +96,6 @@ func _set_stats(stats: CardTemplate):
 	_set_costs(wind_container, stats.wind_cost, "wind")
 	
 func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
-	container.use_parent_material = true
 	
 	var texture: Texture2D = nature_sprites.get(nature)
 	if texture == null:
@@ -108,7 +104,6 @@ func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	for i in amount:
 		var icon := TextureRect.new()
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.use_parent_material = true
 		
 		match nature:
 			"fire":
@@ -159,11 +154,14 @@ func cant_play() -> void:
 	animation_player.play("cant_play")
 	
 func burn_card() -> void:
+	animation_player.play_backwards("card_flip")
 	if material is ShaderMaterial:
-		var mat := material as ShaderMaterial
+		rotation_degrees = 0
 		
+		var mat := material as ShaderMaterial
+		mat.set_shader_parameter("burnColor", card_stat.nature_color_map.get(card_stat.Nature, Color.WHITE))
 		# Set starting position (center of card in UV space)
-		mat.set_shader_parameter("position", Vector2(randf_range(0.0, 1.0), randf_range(0.0, 1.0)))
+		mat.set_shader_parameter("position", random_edge_uv())
 		mat.set_shader_parameter("radius", 0.0)
 		
 		var tween := create_tween()
@@ -172,6 +170,15 @@ func burn_card() -> void:
 		await tween.finished
 		queue_free()
 		
+func random_edge_uv() -> Vector2:
+	var t := randf() # 0–1 along the edge
+	match randi() % 4:
+		0: return Vector2(t, 0.0) # top
+		1: return Vector2(t, 1.0) # bottom
+		2: return Vector2(0.0, t) # left
+		3: return Vector2(1.0, t) # right
+	return Vector2.ZERO
+
 func _process(delta: float) -> void:
 	if not is_inside_tree() or discarded:
 		return

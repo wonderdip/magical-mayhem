@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://80j1tuaoem6c"]
+[gd_scene load_steps=17 format=3 uid="uid://80j1tuaoem6c"]
 
 [ext_resource type="Script" uid="uid://fujsi3nnbksy" path="res://Scripts/card.gd" id="1_bnspj"]
 [ext_resource type="Shader" uid="uid://2ipl2teh3d20" path="res://Shaders/dissolve.gdshader" id="1_xnv4g"]
@@ -8,18 +8,21 @@
 [ext_resource type="FontFile" uid="uid://b3l3ca8hd6g3f" path="res://Assets/Fonts/Birds of Paradise ╕ PERSONAL USE ONLY.ttf" id="5_yvxpl"]
 [ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="6_uf1hq"]
 
+[sub_resource type="Gradient" id="Gradient_xnv4g"]
+
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_xnv4g"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u5wvb"]
 noise = SubResource("FastNoiseLite_xnv4g")
+color_ramp = SubResource("Gradient_xnv4g")
 seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5wvb"]
 resource_local_to_scene = true
 shader = ExtResource("1_xnv4g")
 shader_parameter/position = Vector2(0, 0)
-shader_parameter/radius = 0.0
-shader_parameter/borderWidth = 0.02
+shader_parameter/radius = -1.0
+shader_parameter/borderWidth = 0.145
 shader_parameter/burnMult = 0.135
 shader_parameter/noiseTexture = SubResource("NoiseTexture2D_u5wvb")
 shader_parameter/burnColor = Color(0.73, 0.42340004, 0.2701, 1)
@@ -178,6 +181,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_pjytt"]
 resource_name = "card_flip"
+length = 0.3
 step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -313,14 +317,12 @@ hover_lift = 80.0
 [node name="CardContainer" type="Control" parent="."]
 modulate = Color(1, 1, 1, 0)
 z_index = -1
-use_parent_material = true
 anchors_preset = 0
 offset_right = 228.0
 offset_bottom = 312.0
 pivot_offset = Vector2(114, 156)
 
 [node name="BGSprite" type="TextureRect" parent="CardContainer"]
-use_parent_material = true
 layout_mode = 0
 offset_right = 228.0
 offset_bottom = 312.0
@@ -329,13 +331,11 @@ texture = ExtResource("2_xnv4g")
 expand_mode = 1
 
 [node name="CardSprite" type="Sprite2D" parent="CardContainer"]
-use_parent_material = true
 position = Vector2(114, 143)
 scale = Vector2(0.08, 0.076)
 texture = ExtResource("3_u5wvb")
 
 [node name="Title" type="Label" parent="CardContainer"]
-use_parent_material = true
 layout_mode = 0
 offset_top = 12.0
 offset_right = 228.0
@@ -348,7 +348,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Description" type="RichTextLabel" parent="CardContainer"]
-use_parent_material = true
 clip_contents = false
 layout_mode = 0
 offset_left = 16.0
@@ -363,7 +362,6 @@ bbcode_enabled = true
 text = "Deal"
 
 [node name="CostContainer" type="HBoxContainer" parent="CardContainer"]
-use_parent_material = true
 layout_mode = 0
 offset_left = 12.0
 offset_top = 56.0
@@ -403,6 +401,7 @@ libraries = {
 }
 
 [node name="DeckSprite" type="TextureRect" parent="."]
+use_parent_material = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
