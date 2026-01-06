@@ -182,7 +182,12 @@ func random_edge_uv() -> Vector2:
 func _process(delta: float) -> void:
 	if not is_inside_tree() or discarded:
 		return
-	
+		
+	if PhaseManager.current_phase == PhaseManager.Phase.DEFEND and card_stat.Card_Type == "Offensive":
+		modulate = Color(0.5, 0.5, 0.5, 1.0)
+	else:
+		modulate = Color.WHITE
+		
 	# Check if mouse is over card
 	var mouse_pos = get_global_mouse_position()
 	var rect = Rect2(global_position, size)

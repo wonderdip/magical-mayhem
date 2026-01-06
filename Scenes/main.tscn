@@ -1,10 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://by7yopupguxum"]
+[gd_scene load_steps=12 format=3 uid="uid://by7yopupguxum"]
 
 [ext_resource type="Script" uid="uid://dt24ick7yy8hh" path="res://Scripts/main.gd" id="1_6bp64"]
 [ext_resource type="PackedScene" uid="uid://bsrym2ob4rqra" path="res://Scenes/hand.tscn" id="2_344ge"]
 [ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://Scripts/deck.gd" id="3_ynf5e"]
 [ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="4_hptm8"]
-[ext_resource type="Script" uid="uid://ooxh4s44wy1e" path="res://Scripts/discard.gd" id="5_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://b4jkaj23t7eq1" path="res://icon.svg" id="6_6iyac"]
 [ext_resource type="PackedScene" uid="uid://5ltupmc1dn21" path="res://Scenes/wizard.tscn" id="7_6bp64"]
 [ext_resource type="Script" uid="uid://c0n46wp30c8t" path="res://Scripts/nature_container.gd" id="8_6iyac"]
@@ -15,8 +14,7 @@
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_6bp64")
-
-[node name="Hand" parent="." instance=ExtResource("2_344ge")]
+hand_scene = ExtResource("2_344ge")
 
 [node name="Deck" type="Node2D" parent="."]
 position = Vector2(36, 740)
@@ -41,7 +39,6 @@ one_shot = true
 
 [node name="Discard" type="Node2D" parent="."]
 position = Vector2(1656, 740)
-script = ExtResource("5_d1ilt")
 
 [node name="DiscardSprite" type="TextureRect" parent="Discard"]
 offset_right = 228.0
@@ -155,11 +152,11 @@ expand_mode = 1
 layout_mode = 2
 
 [node name="Button" type="Button" parent="."]
-offset_left = 1236.0
-offset_top = 316.0
-offset_right = 1355.0
-offset_bottom = 347.0
-scale = Vector2(1.785407, 2.7918737)
+offset_left = 1267.0
+offset_top = 319.0
+offset_right = 1601.0
+offset_bottom = 410.0
+theme_override_font_sizes/font_size = 56
 text = "ADD NATURES"
 
 [connection signal="gui_input" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_gui_input"]

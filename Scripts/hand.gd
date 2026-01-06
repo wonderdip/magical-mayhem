@@ -95,10 +95,10 @@ func remove_selected_card(card: Card) -> void:
 	update_hand()
 
 func play_cards() -> void:
-	var player := PhaseManager.current_player_turn
+	var player : PhaseManager.PlayerTurn = PhaseManager.current_player_turn
 	var player_natures = PlayerManager.player_natures[player]
-
-	for card in selected_cards:
+	print("played")
+	for card in selected_cards.duplicate():
 		if (
 			player_natures[PlayerManager.Nature.FIRE]  >= card.card_stat.fire_cost
 			and player_natures[PlayerManager.Nature.WATER] >= card.card_stat.water_cost
@@ -106,7 +106,6 @@ func play_cards() -> void:
 			and player_natures[PlayerManager.Nature.EARTH] >= card.card_stat.earth_cost
 		):
 			card.play()
-
 			player_natures[PlayerManager.Nature.FIRE]  -= card.card_stat.fire_cost
 			player_natures[PlayerManager.Nature.WATER] -= card.card_stat.water_cost
 			player_natures[PlayerManager.Nature.WIND]  -= card.card_stat.wind_cost
@@ -114,6 +113,7 @@ func play_cards() -> void:
 
 			natures.update_for_player()
 		else:
+			
 			card.cant_play()
 
 func update_hand() -> void:
