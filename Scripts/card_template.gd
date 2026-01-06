@@ -15,6 +15,7 @@ class_name CardTemplate
 @export var earth_cost: int = 0
 @export var card_texture: Texture2D
 @export_enum("Fire", "Water", "Wind", "Earth") var Nature: String
+@export_enum("Offensive", "Defensive", "Utility") var Card_Type: String
 @export_multiline var description: String
 
 @export var fire_colour: Color = Color(0.906, 0.369, 0.0)

@@ -11,5 +11,6 @@ water_cost = 3
 earth_cost = 1
 card_texture = ExtResource("1_t7wcv")
 Nature = "Water"
-description = "Deal (DMG) Damage"
+Card_Type = "Offensive"
+description = "Deal (DMG) damage"
 metadata/_custom_type_script = "uid://dxbp03a55cebo"

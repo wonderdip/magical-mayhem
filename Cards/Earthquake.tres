@@ -12,5 +12,6 @@ discard_hand = true
 earth_cost = 2
 card_texture = ExtResource("1_awd75")
 Nature = "Earth"
-description = "Discard hand, Draw (DRAW) and deal (DMG) damage"
+Card_Type = "Utility"
+description = "Discard hand, Draw (DRAW) and Deal (DMG) damage"
 metadata/_custom_type_script = "uid://dxbp03a55cebo"

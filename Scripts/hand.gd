@@ -94,22 +94,28 @@ func remove_selected_card(card: Card) -> void:
 	card.selected = false
 	update_hand()
 
-func play_cards():
+func play_cards() -> void:
+	var player := PhaseManager.current_player_turn
+	var player_natures = PlayerManager.player_natures[player]
+
 	for card in selected_cards:
 		if (
-			Natures.fire_natures >= card.card_stat.fire_cost
-			and Natures.water_natures >= card.card_stat.water_cost
-			and Natures.wind_natures >= card.card_stat.wind_cost
-			and Natures.earth_natures >= card.card_stat.earth_cost
+			player_natures[PlayerManager.Nature.FIRE]  >= card.card_stat.fire_cost
+			and player_natures[PlayerManager.Nature.WATER] >= card.card_stat.water_cost
+			and player_natures[PlayerManager.Nature.WIND]  >= card.card_stat.wind_cost
+			and player_natures[PlayerManager.Nature.EARTH] >= card.card_stat.earth_cost
 		):
 			card.play()
-			Natures.fire_natures -= card.card_stat.fire_cost
-			Natures.water_natures -= card.card_stat.water_cost
-			Natures.wind_natures -= card.card_stat.wind_cost
-			Natures.earth_natures -= card.card_stat.earth_cost
-			natures.change_labels()
+
+			player_natures[PlayerManager.Nature.FIRE]  -= card.card_stat.fire_cost
+			player_natures[PlayerManager.Nature.WATER] -= card.card_stat.water_cost
+			player_natures[PlayerManager.Nature.WIND]  -= card.card_stat.wind_cost
+			player_natures[PlayerManager.Nature.EARTH] -= card.card_stat.earth_cost
+
+			natures.update_for_player()
 		else:
 			card.cant_play()
+
 func update_hand() -> void:
 	var count := cards.size()
 	if count == 0:

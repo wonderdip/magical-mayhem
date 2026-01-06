@@ -11,5 +11,6 @@ fire_cost = 4
 wind_cost = 1
 card_texture = ExtResource("1_x8xue")
 Nature = "Fire"
-description = "Deal (DMG) Damage"
+Card_Type = "Offensive"
+description = "Deal (DMG) damage"
 metadata/_custom_type_script = "uid://dxbp03a55cebo"

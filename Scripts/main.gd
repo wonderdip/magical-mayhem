@@ -37,8 +37,8 @@ func _discard_card(dragged_card: Card):
 		hand.remove_card(dragged_card)
 	
 func _on_button_pressed() -> void:
-	Natures.add_natures(1)
-	natures.change_labels()
+	PlayerManager.add_natures(1)
+	natures.update_for_labels()
 	
 func _process(_delta: float) -> void:
 	match PhaseManager.current_phase:
@@ -64,12 +64,12 @@ func _on_phase_changed() -> void:
 	if PhaseManager.current_phase == PhaseManager.Phase.DRAW:
 		if is_first_draw:
 			_spawn_card(2)
-			Natures.add_natures(6)
+			PlayerManager.add_natures(6)
 			is_first_draw = false
 			
 		_spawn_card(PhaseManager.card_draw_amount)
-		Natures.add_natures(PhaseManager.nature_draw_amount)
-		natures.change_labels()
+		PlayerManager.add_natures(PhaseManager.nature_draw_amount)
+		natures.update_for_player()
 		PhaseManager._change_phase()
 
 func _on_end_turn_pressed() -> void:

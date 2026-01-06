@@ -10,5 +10,6 @@ dmg = 3
 wind_cost = 3
 card_texture = ExtResource("1_s6k3a")
 Nature = "Wind"
-description = "Deal (DMG) Damage"
+Card_Type = "Offensive"
+description = "Deal (DMG) damage"
 metadata/_custom_type_script = "uid://dxbp03a55cebo"
