@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b2bfdtrxj4vgf"
-path="res://.godot/imported/Amika Blackletter Free Font.ttf-9f270272652d9005367d87d6914c4b29.fontdata"
+uid="uid://bcki2a3yioi6g"
+path="res://.godot/imported/germania.regular.ttf-aa4c8d887af54ef3b65c705341e34e40.fontdata"
 
 [deps]
 
-source_file="res://Assets/Fonts/Amika Blackletter Free Font.ttf"
-dest_files=["res://.godot/imported/Amika Blackletter Free Font.ttf-9f270272652d9005367d87d6914c4b29.fontdata"]
+source_file="res://Assets/Fonts/germania.regular.ttf"
+dest_files=["res://.godot/imported/germania.regular.ttf-aa4c8d887af54ef3b65c705341e34e40.fontdata"]
 
 [params]
 
@@ -29,7 +29,7 @@ oversampling=5.0
 Fallbacks=null
 fallbacks=[]
 Compress=null
-compress=false
+compress=true
 preload=[{
 "chars": [],
 "glyphs": [],

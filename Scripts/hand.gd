@@ -1,12 +1,14 @@
 extends Node2D
 
+signal discard_queue_finished
+signal draw_queue_finished
+
 @export var hand_center := Vector2(960, 740)
 @export var hand_width := 960.0
 @export var hand_curve := 140.0
 @export var card_spacing := 150.0
 @export var max_rotation := 15.0
 
-@onready var curve: Line2D =  $HandCurve
 @onready var deck: Node2D = $"../Deck"
 @onready var discard: Node2D = $"../Discard"
 @onready var natures: Node2D = $"../Natures"
@@ -25,6 +27,8 @@ var selected_cards: Array[Card] = []
 
 var _draw_queue: int = 0
 var _is_drawing: bool = false
+var _discard_queue: Array[Card] = []
+var _is_discarding: bool = false
 
 func add_card(amount: int = 1) -> void:
 	if amount <= 0:
@@ -45,7 +49,9 @@ func _process_draw_queue() -> void:
 		_draw_queue -= 1
 		await get_tree().create_timer(draw_delay).timeout
 	_is_drawing = false
-	
+	if _draw_queue == 0:
+		draw_queue_finished.emit()
+		
 func _spawn_single_card() -> void:
 	var card_scene := preload("res://Scenes/card.tscn")
 	var card: Card = card_scene.instantiate()
@@ -65,21 +71,46 @@ func _spawn_single_card() -> void:
 func remove_card(card: Card) -> void:
 	if card not in cards:
 		return
+
+	# Prevent duplicate queueing
+	if card in _discard_queue:
+		return
+
+	_discard_queue.append(card)
+	_process_discard_queue()
+	
+func _process_discard_queue() -> void:
+	if _is_discarding:
+		return
+	if _discard_queue.is_empty():
+		discard_queue_finished.emit()
+		return
+
+	_is_discarding = true
+	var card: Card = _discard_queue.pop_front()
+	card.z_index = 100
+	# Remove immediately so layout updates correctly
 	cards.erase(card)
 	card.discarded = true
-	
+
 	var tween := get_tree().create_tween()
 	tween.tween_property(
 		card,
 		"global_position",
 		discard.global_position,
-		0.5
+		0.3
 	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	
+
 	await tween.finished
+
 	card.burn_card()
+
+	_is_discarding = false
 	update_hand()
-	
+
+	# Process next discard automatically
+	_process_discard_queue()
+
 func add_selected_card(card: Card) -> void:
 	if card in selected_cards:
 		return
@@ -87,7 +118,7 @@ func add_selected_card(card: Card) -> void:
 	card.selected = true
 	update_hand()
 
-func remove_selected_card(card: Card) -> void:
+func deselect_card(card: Card) -> void:
 	if card not in selected_cards:
 		return
 	selected_cards.erase(card)
@@ -97,6 +128,7 @@ func remove_selected_card(card: Card) -> void:
 func play_cards() -> void:
 	var player : PhaseManager.PlayerTurn = PhaseManager.current_player_turn
 	var player_natures = PlayerManager.player_natures[player]
+	
 	print("played")
 	for card in selected_cards.duplicate():
 		if (
@@ -104,6 +136,8 @@ func play_cards() -> void:
 			and player_natures[PlayerManager.Nature.WATER] >= card.card_stat.water_cost
 			and player_natures[PlayerManager.Nature.WIND]  >= card.card_stat.wind_cost
 			and player_natures[PlayerManager.Nature.EARTH] >= card.card_stat.earth_cost
+			and not (card.card_stat.Card_Type == "Offensive" and PhaseManager.current_phase == PhaseManager.Phase.DEFEND)
+			
 		):
 			card.play()
 			player_natures[PlayerManager.Nature.FIRE]  -= card.card_stat.fire_cost
@@ -146,15 +180,6 @@ func update_hand() -> void:
 		card.target_rotation = target_rot
 		card.base_z = count + i
 		card.z_index = card.base_z
-		
-	var points: PackedVector2Array = []
-	for i in range(33):
-		var t := float(i) / float(33)
-		var x_offset := (t - 0.5) * effective_width
-		var y_offset := -hand_curve * (t - 0.5) * (t - 0.5)
-		var point := hand_center + Vector2(x_offset, -y_offset - 50)
-		points.append(point)
-	curve.points = points
 
 func start_dragging(card: Card) -> void:
 	is_dragging_card = true

@@ -76,7 +76,7 @@ func _switch_active_hand() -> void:
 		hand_p2.visible = true
 		
 func _play_card():
-	if PhaseManager.current_phase == PhaseManager.Phase.PLAY:
+	if PhaseManager.current_phase != PhaseManager.Phase.DRAW:
 		current_hand.play_cards()
 
 func _spawn_card(amount: int) -> void:

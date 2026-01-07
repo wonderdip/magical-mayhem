@@ -20,12 +20,21 @@ class_name Card
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var deck_sprite: TextureRect = $DeckSprite
 @onready var select_timer: Timer = $SelectTimer
+@onready var card_type_icon: TextureRect = $CardContainer/CardTypeIcon
+
+
 
 var nature_sprites := {
 	"fire": preload("res://Assets/Nature Sprites/fire icon.png"),
 	"water": preload("res://Assets/Nature Sprites/water icon.png"),
 	"wind": preload("res://Assets/Nature Sprites/wind icon.png"),
 	"earth": preload("res://Assets/Nature Sprites/earth icon.png")
+}
+
+var cardtype_sprites := {
+	"Offensive": preload("res://Assets/Icons/crossed-swords.png"),
+	"Defensive": preload("res://Assets/Icons/attached-shield.png"),
+	"Utility": preload("res://Assets/Icons/backpack.png")
 }
 
 var dragging := false
@@ -86,14 +95,23 @@ func _set_stats(stats: CardTemplate):
 	)
 	desc_text = desc_text.replace(
 		"(DRAW)",
-		"[color=black][b]%s[/b][/color]" % stats.draw_amount
+		"[color=web_gray][b]%s[/b][/color]" % stats.draw_amount
 	)
-	description.text = desc_text
 	
+	var base_color: Color = stats.nature_color_map.get(stats.Nature)
+	var outline_color := base_color.lerp(Color.BLACK, 0.6)
+	
+	title.add_theme_color_override("font_color", base_color)
+	title.add_theme_color_override("font_outline_color", outline_color)
+	description.add_theme_color_override("font_outline_color", outline_color)
+	
+	description.text = desc_text
 	_set_costs(fire_container, stats.fire_cost, "fire")
 	_set_costs(water_container, stats.water_cost, "water")
 	_set_costs(earth_container, stats.earth_cost, "earth")
 	_set_costs(wind_container, stats.wind_cost, "wind")
+	
+	card_type_icon.texture = cardtype_sprites.get(stats.Card_Type)
 	
 func _set_costs(container: HBoxContainer, amount: int, nature: String) -> void:
 	
@@ -133,20 +151,25 @@ func bbcode_color(color: Color, text: String) -> String:
 
 func play():
 	played = true
+	if card_stat.discard_hand:
+		for card in hand.cards.duplicate():
+			if card == self:
+				continue
+			hand.remove_card(card)
+			await hand.discard_queue_finished
+	else:
+		for i in range(card_stat.discard_amount):
+			if hand.cards.is_empty():
+				break
+			hand.remove_card(hand.cards[0])
+			await hand.discard_queue_finished
 	
-	if played:
-		if card_stat.discard_hand:
-			for card in hand.cards.duplicate():
-				hand.remove_card(card)
-		else:
-			for i in range(card_stat.discard_amount):
-				if hand.cards.is_empty():
-					break
-				hand.remove_card(hand.cards[0])
+	if card_stat.draw_amount > 0:
 		hand.add_card(card_stat.draw_amount)
+		await hand.draw_queue_finished
 		
 	played = false
-	hand.remove_selected_card(self)
+	hand.deselect_card(self)
 	hand.remove_card(self)
 		
 func cant_play() -> void:
@@ -208,7 +231,7 @@ func _process(delta: float) -> void:
 		var should_hover = mouse_over and is_topmost_card() and can_hover
 		
 		if selected and should_hover:
-			scale = scale.lerp(Vector2(1.05, 1.05), lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.35, 1.35), lerp_speed * delta)
 			var hover_pos := target_position + Vector2(0, -hover_lift)
 			global_position = global_position.lerp(hover_pos, lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, 0.0, lerp_speed * delta)
@@ -216,19 +239,19 @@ func _process(delta: float) -> void:
 		elif selected:
 			var hover_pos := target_position + Vector2(0, -hover_lift)
 			global_position = global_position.lerp(hover_pos, lerp_speed * delta)
-			scale = scale.lerp(Vector2(1.0, 1.0), lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.3, 1.3), lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, 0.0, lerp_speed * delta)
 			
 		elif should_hover:
 			hovering = true
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
-			scale = scale.lerp(Vector2(1.05, 1.05), lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.35, 1.35), lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
 		else:
 			hovering = false
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
-			scale = scale.lerp(Vector2.ONE, lerp_speed * delta)
+			scale = scale.lerp(Vector2(1.3, 1.3), lerp_speed * delta)
 
 func is_topmost_card() -> bool:
 	if not mouse_over or not hand:
@@ -265,14 +288,14 @@ func _input(event):
 			elif not select_timer.is_stopped():
 				# quick click → toggle select
 				if selected:
-					hand.remove_selected_card(self)
+					hand.deselect_card(self)
 				else:
 					hand.add_selected_card(self)
 			select_timer.stop()
 			
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		for i in hand.selected_cards:
-			hand.remove_selected_card(i)
+			hand.deselect_card(i)
 			
 func _on_select_timer_timeout():
 	# held long enough → drag

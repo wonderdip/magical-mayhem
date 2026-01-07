@@ -30,3 +30,7 @@ window/size/mode=2
 window/size/resizable=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="ignore"
+
+[rendering]
+
+viewport/hdr_2d=true

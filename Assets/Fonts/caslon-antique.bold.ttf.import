@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b2bfdtrxj4vgf"
-path="res://.godot/imported/Amika Blackletter Free Font.ttf-9f270272652d9005367d87d6914c4b29.fontdata"
+uid="uid://bgtnr4vnnbon8"
+path="res://.godot/imported/caslon-antique.bold.ttf-6ab5e256ec5f20cc8a7b6d73b04380b2.fontdata"
 
 [deps]
 
-source_file="res://Assets/Fonts/Amika Blackletter Free Font.ttf"
-dest_files=["res://.godot/imported/Amika Blackletter Free Font.ttf-9f270272652d9005367d87d6914c4b29.fontdata"]
+source_file="res://Assets/Fonts/caslon-antique.bold.ttf"
+dest_files=["res://.godot/imported/caslon-antique.bold.ttf-6ab5e256ec5f20cc8a7b6d73b04380b2.fontdata"]
 
 [params]
 
@@ -22,20 +22,19 @@ msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
-hinting=2
-subpixel_positioning=0
+hinting=1
+subpixel_positioning=4
 keep_rounding_remainders=true
 oversampling=5.0
 Fallbacks=null
 fallbacks=[]
 Compress=null
-compress=false
+compress=true
 preload=[{
 "chars": [],
 "glyphs": [],
 "name": "New Configuration",
-"size": Vector2i(16, 0),
-&"variation_embolden": 0.0
+"size": Vector2i(16, 0)
 }]
 language_support={}
 script_support={}

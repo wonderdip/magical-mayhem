@@ -53,9 +53,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 868.0
-offset_top = 616.0
+offset_top = 515.0
 offset_right = 978.0
-offset_bottom = 680.0
+offset_bottom = 579.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Play"
@@ -64,9 +64,9 @@ text = "Play"
 
 [node name="EndTurn" type="Button" parent="."]
 offset_left = 984.0
-offset_top = 616.0
+offset_top = 515.0
 offset_right = 1104.0
-offset_bottom = 680.0
+offset_bottom = 579.0
 text = "End Turn"
 
 [node name="Label" type="Label" parent="."]

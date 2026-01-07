@@ -21,7 +21,7 @@ class_name CardTemplate
 @export var fire_colour: Color = Color(0.906, 0.369, 0.0)
 @export var water_colour: Color = Color(0.188, 0.545, 0.871)
 @export var wind_colour: Color = Color(0.9, 0.9, 0.9)
-@export var earth_colour: Color = Color(0.251, 0.169, 0.035)
+@export var earth_colour: Color = Color(0.469, 0.292, 0.039, 1.0)
 
 var nature_color_map := { 
 	"Fire": fire_colour, 

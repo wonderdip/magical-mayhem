@@ -4,5 +4,6 @@
 
 [node name="Hand" type="Node2D"]
 script = ExtResource("1_u4p2i")
-
-[node name="HandCurve" type="Line2D" parent="."]
+hand_center = Vector2(1080, 640)
+card_spacing = 450.0
+min_hand_width = 450.0
