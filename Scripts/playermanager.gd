@@ -17,6 +17,12 @@ var player_natures := {
 	}
 }
 
+var player_one_health :  int = 25
+var player_two_health : int = 25
+
+var current_attack : int = 0
+var current_block : int = 0
+
 func _ready() -> void:
 	randomize()
 
@@ -24,3 +30,6 @@ func add_natures(amount: int) -> void:
 	for i in range(amount):
 		var roll := randi() % 4
 		player_natures[PhaseManager.current_player_turn][roll] += 1
+
+func calculate_attack():
+	current_attack -= current_block

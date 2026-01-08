@@ -4,6 +4,9 @@ extends Node2D
 @onready var discard: Node2D = $Discard
 @onready var label: Label = $Label
 @onready var label_2: Label = $Label2
+@onready var label_3: Label = $Label3
+@onready var label_4: Label = $Label4
+
 @onready var natures: Node2D = $Natures
 @onready var end_turn: Button = $EndTurn
 @onready var play_cards: Button = $PlayCards
@@ -28,7 +31,7 @@ func _ready() -> void:
 	_create_hands()
 	
 	# Start the game after a brief delay
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(1).timeout
 	_start_game()
 
 func _create_hands() -> void:
@@ -100,6 +103,11 @@ func _process(_delta: float) -> void:
 			label.text = "PLAY PHASE"
 		PhaseManager.Phase.DEFEND:
 			label.text = "DEFEND PHASE"
+		PhaseManager.Phase.BATTLE:
+			label.text = "BATTLE CALC"
+			
+	label_3.text = str(PlayerManager.current_attack)
+	label_4.text = str(PlayerManager.current_block)
 	
 	# Update player label
 	match PhaseManager.current_player_turn:
@@ -140,7 +148,22 @@ func _on_phase_changed() -> void:
 				
 				player_has_drawn[PhaseManager.current_player_turn] = true
 				natures.update_for_player()
-
+		PhaseManager.Phase.BATTLE:
+			PlayerManager.calculate_attack()
+			match PhaseManager.current_player_turn:
+				PhaseManager.PlayerTurn.PLAYER_2:
+					PlayerManager.player_two_health -= PlayerManager.current_attack
+					print(PlayerManager.player_one_health)
+					print(PlayerManager.player_two_health)
+				PhaseManager.PlayerTurn.PLAYER_1:
+					PlayerManager.player_one_health -= PlayerManager.current_attack
+					print(PlayerManager.player_one_health)
+					print(PlayerManager.player_two_health)
+					
+			PlayerManager.current_attack = 0
+			PlayerManager.current_block = 0
+			PhaseManager._change_phase()
+			
 func _on_end_turn_pressed() -> void:
 	if PhaseManager.current_phase != PhaseManager.Phase.DRAW:
 		PhaseManager._change_phase()

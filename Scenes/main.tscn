@@ -159,6 +159,22 @@ offset_bottom = 410.0
 theme_override_font_sizes/font_size = 56
 text = "ADD NATURES"
 
+[node name="Label3" type="Label" parent="."]
+offset_left = 566.0
+offset_top = 283.0
+offset_right = 786.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 71
+text = "Attack"
+
+[node name="Label4" type="Label" parent="."]
+offset_left = 568.0
+offset_top = 394.0
+offset_right = 767.0
+offset_bottom = 478.0
+theme_override_font_sizes/font_size = 61
+text = "BLOCK"
+
 [connection signal="gui_input" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_gui_input"]
 [connection signal="mouse_entered" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_entered"]
 [connection signal="mouse_exited" from="Deck/DeckSprite" to="Deck" method="_on_deck_sprite_mouse_exited"]

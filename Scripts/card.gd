@@ -168,6 +168,9 @@ func play():
 		hand.add_card(card_stat.draw_amount)
 		await hand.draw_queue_finished
 		
+	PlayerManager.current_attack += card_stat.dmg
+	PlayerManager.current_block += card_stat.block
+	
 	played = false
 	hand.deselect_card(self)
 	hand.remove_card(self)

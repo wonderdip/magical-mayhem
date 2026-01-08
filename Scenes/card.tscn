@@ -366,7 +366,7 @@ theme_override_fonts/bold_font = ExtResource("6_u5wvb")
 theme_override_font_sizes/normal_font_size = 26
 theme_override_font_sizes/bold_font_size = 30
 bbcode_enabled = true
-text = "Deal 20 trillion damage and goon to femboys"
+text = "FemboyFutaHouse"
 horizontal_alignment = 1
 
 [node name="CostContainer" type="HBoxContainer" parent="CardContainer"]
