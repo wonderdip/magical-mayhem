@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3 uid="uid://uvmt35rwwm0h"]
+
+[ext_resource type="Script" uid="uid://vqep50yx6qs4" path="res://Scripts/main.gd" id="1_qf67g"]
+[ext_resource type="PackedScene" uid="uid://by7yopupguxum" path="res://Scenes/Player.tscn" id="2_5lckf"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_qf67g")
+player_scene = ExtResource("2_5lckf")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HostButton" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 68.0
+offset_right = 259.0
+offset_bottom = 174.0
+disabled = true
+text = "Host lobby"
+
+[node name="JoinButton" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 182.0
+offset_right = 259.0
+offset_bottom = 307.0
+disabled = true
+text = "Join lobby"
+
+[node name="IdPrompt" type="LineEdit" parent="UI"]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 318.0
+offset_right = 261.0
+offset_bottom = 349.0
+placeholder_text = "Lobby ID"
+
+[node name="NamePrompt" type="LineEdit" parent="UI"]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 124.0
+offset_right = 439.0
+offset_bottom = 155.0
+placeholder_text = "Lobby Name"
+
+[node name="ServerVisibility" type="OptionButton" parent="UI"]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 73.0
+offset_right = 435.0
+offset_bottom = 112.0
+selected = 0
+item_count = 2
+popup/item_0/text = "Public"
+popup/item_0/id = 0
+popup/item_1/text = "Private"
+popup/item_1/id = 1
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://by7yopupguxum")
+spawn_path = NodePath("..")
+
+[connection signal="pressed" from="UI/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="UI/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="text_changed" from="UI/IdPrompt" to="." method="_on_id_prompt_text_changed"]
+[connection signal="text_changed" from="UI/NamePrompt" to="." method="_on_name_prompt_text_changed"]
+[connection signal="item_selected" from="UI/ServerVisibility" to="." method="_on_server_visibility_item_selected"]

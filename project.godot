@@ -8,10 +8,14 @@
 
 config_version=5
 
+[GD-Sync]
+
+version="0.14"
+
 [application]
 
 config/name="Magical Mayhem"
-run/main_scene="uid://by7yopupguxum"
+run/main_scene="uid://uvmt35rwwm0h"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -30,6 +34,10 @@ window/size/mode=2
 window/size/resizable=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="ignore"
+
+[editor_plugins]
+
+enabled=PackedStringArray()
 
 [rendering]
 

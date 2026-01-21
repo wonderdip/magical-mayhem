@@ -1,24 +1,24 @@
 [gd_scene load_steps=12 format=3 uid="uid://by7yopupguxum"]
 
-[ext_resource type="Script" uid="uid://dt24ick7yy8hh" path="res://Scripts/main.gd" id="1_6bp64"]
-[ext_resource type="PackedScene" uid="uid://bsrym2ob4rqra" path="res://Scenes/hand.tscn" id="2_344ge"]
-[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://Scripts/deck.gd" id="3_ynf5e"]
-[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="4_hptm8"]
-[ext_resource type="Texture2D" uid="uid://b4jkaj23t7eq1" path="res://icon.svg" id="6_6iyac"]
-[ext_resource type="PackedScene" uid="uid://5ltupmc1dn21" path="res://Scenes/wizard.tscn" id="7_6bp64"]
-[ext_resource type="Script" uid="uid://c0n46wp30c8t" path="res://Scripts/nature_container.gd" id="8_6iyac"]
-[ext_resource type="Texture2D" uid="uid://b6lsbf5unofnq" path="res://Assets/CardTextures/Hand of Fire.png" id="8_d1ilt"]
-[ext_resource type="Texture2D" uid="uid://d1hho1jny2xu6" path="res://Assets/CardTextures/Hand of Water.png" id="9_6iyac"]
-[ext_resource type="Texture2D" uid="uid://cuxgskcus630o" path="res://Assets/CardTextures/Hand of wind.png" id="10_fdnlq"]
-[ext_resource type="Texture2D" uid="uid://bok02lqq8ysgf" path="res://Assets/CardTextures/Hand of Earth.png" id="11_jkdf5"]
+[ext_resource type="Script" uid="uid://dt24ick7yy8hh" path="res://Scripts/player.gd" id="1_ksbbd"]
+[ext_resource type="PackedScene" uid="uid://bsrym2ob4rqra" path="res://Scenes/hand.tscn" id="2_glx4g"]
+[ext_resource type="Script" uid="uid://ckojxqcmxewne" path="res://Scripts/deck.gd" id="3_miouo"]
+[ext_resource type="Texture2D" uid="uid://dtr1axxdn8v37" path="res://Assets/CardTextures/Magical Mayhem spell deck back.png" id="4_o3h8g"]
+[ext_resource type="Texture2D" uid="uid://b4jkaj23t7eq1" path="res://icon.svg" id="5_1e7my"]
+[ext_resource type="PackedScene" uid="uid://5ltupmc1dn21" path="res://Scenes/wizard.tscn" id="6_arntx"]
+[ext_resource type="Script" uid="uid://c0n46wp30c8t" path="res://Scripts/nature_container.gd" id="7_lslt6"]
+[ext_resource type="Texture2D" uid="uid://b6lsbf5unofnq" path="res://Assets/CardTextures/Hand of Fire.png" id="8_ulo2v"]
+[ext_resource type="Texture2D" uid="uid://d1hho1jny2xu6" path="res://Assets/CardTextures/Hand of Water.png" id="9_1iu4k"]
+[ext_resource type="Texture2D" uid="uid://cuxgskcus630o" path="res://Assets/CardTextures/Hand of wind.png" id="10_m0x7a"]
+[ext_resource type="Texture2D" uid="uid://bok02lqq8ysgf" path="res://Assets/CardTextures/Hand of Earth.png" id="11_5v66d"]
 
-[node name="main" type="Node2D"]
-script = ExtResource("1_6bp64")
-hand_scene = ExtResource("2_344ge")
+[node name="Player" type="Node2D"]
+script = ExtResource("1_ksbbd")
+hand_scene = ExtResource("2_glx4g")
 
 [node name="Deck" type="Node2D" parent="."]
 position = Vector2(36, 740)
-script = ExtResource("3_ynf5e")
+script = ExtResource("3_miouo")
 
 [node name="DeckSprite" type="TextureRect" parent="Deck"]
 anchors_preset = 8
@@ -30,7 +30,7 @@ offset_right = 228.0
 offset_bottom = 312.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_hptm8")
+texture = ExtResource("4_o3h8g")
 expand_mode = 1
 
 [node name="Poptimer" type="Timer" parent="Deck"]
@@ -43,7 +43,7 @@ position = Vector2(1656, 740)
 [node name="DiscardSprite" type="TextureRect" parent="Discard"]
 offset_right = 228.0
 offset_bottom = 312.0
-texture = ExtResource("6_6iyac")
+texture = ExtResource("5_1e7my")
 expand_mode = 1
 
 [node name="PlayCards" type="Button" parent="."]
@@ -60,7 +60,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Play"
 
-[node name="Wizard" parent="." instance=ExtResource("7_6bp64")]
+[node name="Wizard" parent="." instance=ExtResource("6_arntx")]
 
 [node name="EndTurn" type="Button" parent="."]
 offset_left = 984.0
@@ -87,7 +87,7 @@ text = "label 2"
 
 [node name="Natures" type="Node2D" parent="."]
 position = Vector2(1560, 152)
-script = ExtResource("8_6iyac")
+script = ExtResource("7_lslt6")
 
 [node name="NatureContainer" type="HBoxContainer" parent="Natures"]
 anchors_preset = 8
@@ -109,7 +109,7 @@ layout_mode = 2
 [node name="FireTexture" type="TextureRect" parent="Natures/NatureContainer/FireContainer"]
 custom_minimum_size = Vector2(180, 240)
 layout_mode = 2
-texture = ExtResource("8_d1ilt")
+texture = ExtResource("8_ulo2v")
 expand_mode = 1
 
 [node name="FireLabel" type="Label" parent="Natures/NatureContainer/FireContainer"]
@@ -121,7 +121,7 @@ layout_mode = 2
 [node name="WaterTexture" type="TextureRect" parent="Natures/NatureContainer/WaterContainer"]
 custom_minimum_size = Vector2(180, 240)
 layout_mode = 2
-texture = ExtResource("9_6iyac")
+texture = ExtResource("9_1iu4k")
 expand_mode = 1
 
 [node name="WaterLabel" type="Label" parent="Natures/NatureContainer/WaterContainer"]
@@ -133,7 +133,7 @@ layout_mode = 2
 [node name="WindTexture" type="TextureRect" parent="Natures/NatureContainer/WindContainer"]
 custom_minimum_size = Vector2(180, 240)
 layout_mode = 2
-texture = ExtResource("10_fdnlq")
+texture = ExtResource("10_m0x7a")
 expand_mode = 1
 
 [node name="WindLabel" type="Label" parent="Natures/NatureContainer/WindContainer"]
@@ -145,7 +145,7 @@ layout_mode = 2
 [node name="EarthTexture" type="TextureRect" parent="Natures/NatureContainer/EarthContainer"]
 custom_minimum_size = Vector2(180, 240)
 layout_mode = 2
-texture = ExtResource("11_jkdf5")
+texture = ExtResource("11_5v66d")
 expand_mode = 1
 
 [node name="EarthLabel" type="Label" parent="Natures/NatureContainer/EarthContainer"]

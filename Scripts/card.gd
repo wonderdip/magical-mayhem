@@ -250,6 +250,7 @@ func _process(delta: float) -> void:
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
 			scale = scale.lerp(Vector2(1.35, 1.35), lerp_speed * delta)
 			rotation_degrees = lerp(rotation_degrees, target_rotation, lerp_speed * delta)
+			
 		else:
 			hovering = false
 			global_position = global_position.lerp(target_position, lerp_speed * delta)
