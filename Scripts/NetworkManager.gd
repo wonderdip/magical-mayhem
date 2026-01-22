@@ -13,7 +13,7 @@ const MAX_PLAYERS: int = 2
 
 var player_one_node: Node2D
 var player_two_node: Node2D
-@onready var lobby: Node2D = $"."
+@onready var lobby = $"."
 
 func _ready() -> void:
 	

@@ -22,7 +22,6 @@ WizardDatabase="*res://Scripts/wizard_database.gd"
 PhaseManager="*res://Scripts/PhaseManager.gd"
 PlayerManager="*res://Scripts/PlayerManager.gd"
 SteamInitializer="*res://Scripts/SteamInitializer.gd"
-NetworkManager="*res://Scripts/NetworkManager.gd"
 
 [display]
 
