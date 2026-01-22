@@ -47,7 +47,8 @@ func create_lobby():
 func _on_Lobby_Created(connection: int, lobbyID: int): 
 	if connection == 1: 
 		SteamInitializer.LOBBY_ID = lobbyID 
-		Steam.setLobbyData(lobbyID, "name", lobby_set_name.text) 
+		Steam.setLobbyData(lobbyID, "name", lobby_set_name.text)
+		Steam.setLobbyData(lobbyID, "game", "MagicalMayhem") 
 		var lobby_name = Steam.getLobbyData(lobbyID, "name") 
 		lobbyName.text = str(lobby_name) 
 		print("Lobby Created, lobby id: ", lobbyID, " Lobby Name: ", lobby_name)
@@ -112,14 +113,16 @@ func _on_Lobby_Match_List(lobbies: Array):
 	for LOBBY in lobbies:
 		var LOBBY_NAME = Steam.getLobbyData(LOBBY, "name")
 		
+		if Steam.getLobbyData(LOBBY, "game") != "MagicalMayhem":
+			continue
 		# Skip this lobby if it doesn't match the search
 		if search_text.length() > 0 and not LOBBY_NAME.to_lower().contains(search_text):
 			continue
 			
 		var LOBBY_MEMBERS = Steam.getNumLobbyMembers(LOBBY)
 		var LOBBY_BUTTON = Button.new()
-		LOBBY_BUTTON.text = "Lobby: " + LOBBY_NAME + " Members: " + str(LOBBY_MEMBERS) + " Lobby ID: " + str(LOBBY)
-		LOBBY_BUTTON.size = Vector2(60, 20)
+		LOBBY_BUTTON.text = "Lobby: " + LOBBY_NAME + " Members: " + str(LOBBY_MEMBERS) + "/2" + " Lobby ID: " + str(LOBBY)
+		LOBBY_BUTTON.size = Vector2(100, 20)
 		LOBBY_BUTTON.pressed.connect(join_lobby.bind(LOBBY, LOBBY_NAME))
 		lobby_list.add_child(LOBBY_BUTTON)
 		
@@ -140,6 +143,8 @@ func _on_host_button_pressed() -> void:
 	create_lobby()
 
 func _on_join_button_pressed() -> void:
+	for child in lobby_list.get_children():
+		child.queue_free()
 	Steam.addRequestLobbyListDistanceFilter(SEARCH_DISTANCE.Close)
 	Steam.requestLobbyList()
 

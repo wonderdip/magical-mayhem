@@ -32,7 +32,7 @@ func _ready() -> void:
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
 	# Create hands manually
-	if NetworkManager.total_players == NetworkManager.MAX_PLAYERS:
+	if SteamInitializer.total_players == SteamInitializer.MAX_PLAYERS:
 		_create_hands()
 		
 		# Start the game after a brief delay
@@ -49,7 +49,7 @@ func _create_hands() -> void:
 	hand_p2 = hand_scene.instantiate()
 	hand_p2.name = "HandP2"
 	hand_p2.visible = false
-	NetworkManager.player_two_node.add_child(hand_p2)
+	SteamInitializer.player_two_node.add_child(hand_p2)
 	
 	# Set current hand to player 1
 	current_hand = hand_p1
