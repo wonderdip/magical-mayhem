@@ -8,10 +8,6 @@
 
 config_version=5
 
-[GD-Sync]
-
-version="0.14"
-
 [application]
 
 config/name="Magical Mayhem"
@@ -24,7 +20,9 @@ config/icon="res://icon.svg"
 CardDatabase="*res://Scripts/card_database.gd"
 WizardDatabase="*res://Scripts/wizard_database.gd"
 PhaseManager="*res://Scripts/PhaseManager.gd"
-PlayerManager="*res://Scripts/playermanager.gd"
+PlayerManager="*res://Scripts/PlayerManager.gd"
+SteamInitializer="*res://Scripts/SteamInitializer.gd"
+NetworkManager="*res://Scripts/NetworkManager.gd"
 
 [display]
 

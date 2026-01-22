@@ -1,11 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://uvmt35rwwm0h"]
+[gd_scene load_steps=2 format=3 uid="uid://uvmt35rwwm0h"]
 
-[ext_resource type="Script" uid="uid://vqep50yx6qs4" path="res://Scripts/main.gd" id="1_qf67g"]
-[ext_resource type="PackedScene" uid="uid://by7yopupguxum" path="res://Scenes/Player.tscn" id="2_5lckf"]
+[ext_resource type="Script" uid="uid://78chk32cnr4" path="res://Scripts/lobby.gd" id="1_bpe3w"]
 
-[node name="Main" type="Node2D"]
-script = ExtResource("1_qf67g")
-player_scene = ExtResource("2_5lckf")
+[node name="Lobby" type="Node2D"]
+script = ExtResource("1_bpe3w")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -37,7 +35,7 @@ offset_left = 99.0
 offset_top = 318.0
 offset_right = 261.0
 offset_bottom = 349.0
-placeholder_text = "Lobby ID"
+placeholder_text = "Lobby ID or Name"
 
 [node name="NamePrompt" type="LineEdit" parent="UI"]
 layout_mode = 0
@@ -57,7 +55,7 @@ selected = 0
 item_count = 2
 popup/item_0/text = "Public"
 popup/item_0/id = 0
-popup/item_1/text = "Private"
+popup/item_1/text = "Friends"
 popup/item_1/id = 1
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]

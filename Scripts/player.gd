@@ -26,16 +26,18 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
 func _ready() -> void:
-	deck.connect("draw_card", _spawn_card)
-	
+	if !is_multiplayer_authority():
+		return
+		
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
 	# Create hands manually
-	_create_hands()
-	
-	# Start the game after a brief delay
-	await get_tree().create_timer(1).timeout
-	_start_game()
+	if NetworkManager.total_players == NetworkManager.MAX_PLAYERS:
+		_create_hands()
+		
+		# Start the game after a brief delay
+		await get_tree().create_timer(1).timeout
+		_start_game()
 
 func _create_hands() -> void:
 	# Instantiate Player 1's hand
@@ -47,7 +49,7 @@ func _create_hands() -> void:
 	hand_p2 = hand_scene.instantiate()
 	hand_p2.name = "HandP2"
 	hand_p2.visible = false
-	add_child(hand_p2)
+	NetworkManager.player_two_node.add_child(hand_p2)
 	
 	# Set current hand to player 1
 	current_hand = hand_p1
