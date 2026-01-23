@@ -17,6 +17,8 @@ var hand_p1: Node2D
 var hand_p2: Node2D
 var current_hand: Node2D
 
+var lobby: Node2D
+
 var player_has_drawn := {
 	PhaseManager.PlayerTurn.PLAYER_1: false,
 	PhaseManager.PlayerTurn.PLAYER_2: false
@@ -26,18 +28,13 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
 func _ready() -> void:
+	lobby = get_parent()
 	if !is_multiplayer_authority():
 		return
 		
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
-	# Create hands manually
-	if SteamInitializer.total_players == SteamInitializer.MAX_PLAYERS:
-		_create_hands()
-		
-		# Start the game after a brief delay
-		await get_tree().create_timer(1).timeout
-		_start_game()
+
 
 func _create_hands() -> void:
 	# Instantiate Player 1's hand

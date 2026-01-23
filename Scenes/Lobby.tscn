@@ -18,13 +18,13 @@ offset_bottom = 174.0
 disabled = true
 text = "Host lobby"
 
-[node name="JoinButton" type="Button" parent="UI"]
+[node name="RefreshButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 99.0
 offset_top = 182.0
 offset_right = 259.0
 offset_bottom = 307.0
-text = "Join lobby"
+text = "Refresh Lobbies"
 
 [node name="IdPrompt" type="LineEdit" parent="UI"]
 layout_mode = 0
@@ -118,7 +118,7 @@ _spawnable_scenes = PackedStringArray("uid://by7yopupguxum")
 spawn_path = NodePath("..")
 
 [connection signal="pressed" from="UI/HostButton" to="." method="_on_host_button_pressed"]
-[connection signal="pressed" from="UI/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="UI/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="text_submitted" from="UI/IdPrompt" to="." method="_on_id_prompt_text_submitted"]
 [connection signal="text_changed" from="UI/LobbySetName" to="." method="_on_name_prompt_text_changed"]
 [connection signal="item_selected" from="UI/ServerVisibility" to="." method="_on_server_visibility_item_selected"]
