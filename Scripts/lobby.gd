@@ -14,6 +14,7 @@ var player_scene : PackedScene = preload("res://Scenes/Player.tscn")
 var is_host : bool = true
 var is_joining: bool
 var found_lobbies := {} # name -> id
+
 const MAX_PLAYERS: int = 2
 
 var lobby_visibility: LOBBY_TYPE = LOBBY_TYPE.LOBBY_TYPE_PUBLIC
@@ -44,18 +45,18 @@ func _ready() -> void:
 	
 	for child in lobby_list.get_children():
 		child.queue_free()
-	Steam.addRequestLobbyListDistanceFilter(SEARCH_DISTANCE.Close)
-	Steam.requestLobbyList()
+	refresh_lobbies()
 	
 func create_lobby():
 	if SteamInitializer.LOBBY_ID == 0:
 		Steam.createLobby(lobby_visibility, MAX_PLAYERS)
+		is_host = true
 		
 func _on_Lobby_Created(connection: int, lobbyID: int): 
 	if connection == 1: 
 		SteamInitializer.LOBBY_ID = lobbyID 
 		Steam.setLobbyData(lobbyID, "name", lobby_set_name.text)
-		Steam.setLobbyData(lobbyID, "game", "MagicalMayhem") 
+		Steam.setLobbyData(lobbyID, "game", SteamInitializer.GAMEFILTERID) 
 		var lobby_name = Steam.getLobbyData(lobbyID, "name") 
 		lobbyName.text = str(lobby_name) 
 		print("Lobby Created, lobby id: ", lobbyID, " Lobby Name: ", lobby_name)
@@ -83,6 +84,11 @@ func _on_Lobby_Joined(lobbyID: int, _permissions: int, _locked: bool, _response:
 	SteamInitializer.LOBBY_ID = lobbyID
 	var lobby_name = Steam.getLobbyData(lobbyID, "name")
 	lobbyName.text = str(lobby_name)
+	if not is_host:
+		peer = SteamMultiplayerPeer.new()
+		peer.server_relay = true
+		peer.create_client(Steam.getLobbyOwner(lobbyID))
+		multiplayer.multiplayer_peer = peer
 	
 	get_lobby_members()
 	is_joining = false
@@ -95,21 +101,20 @@ func _on_Lobby_Join_Requested(lobbyID: int, friendID: int):
 func _add_player(id: int = 1):
 	var player = player_scene.instantiate()
 	player.name = str(id)
+	player.lobby = self  # Set lobby reference before adding
 	call_deferred("add_child", player)
-	player.lobby = self
 	
 	match SteamInitializer.LOBBY_MEMBERS.size():
 		1:
 			player_one_node = player
 		2:
 			player_two_node = player
-		# Create hands manually
-	if SteamInitializer.LOBBY_MEMBERS.size() == MAX_PLAYERS - 1:
-		player_one_node._create_hands()
-		
-		# Start the game after a brief delay
-		await get_tree().create_timer(1).timeout
-		player_one_node._start_game()
+			# Wait for both players to be ready before creating hands
+			await player_two_node.ready
+			if player_one_node.is_node_ready():
+				player_one_node._create_hands()
+				await get_tree().create_timer(0.1).timeout
+				player_one_node._start_game()
 		
 func _remove_player(id: int):
 	if not self.has_node(str(id)):
@@ -153,8 +158,8 @@ func _on_Lobby_Match_List(lobbies: Array):
 	for LOBBY in lobbies:
 		var LOBBY_NAME = Steam.getLobbyData(LOBBY, "name")
 		
-		#if Steam.getLobbyData(LOBBY, "game") != "MagicalMayhem":
-			#continue
+		if Steam.getLobbyData(LOBBY, "game") != SteamInitializer.GAMEFILTERID:
+			continue
 		# Skip this lobby if it doesn't match the search
 		if search_text.length() > 0 and not LOBBY_NAME.to_lower().contains(search_text):
 			continue
@@ -165,7 +170,11 @@ func _on_Lobby_Match_List(lobbies: Array):
 		LOBBY_BUTTON.size = Vector2(100, 20)
 		LOBBY_BUTTON.pressed.connect(join_lobby.bind(LOBBY))
 		lobby_list.add_child(LOBBY_BUTTON)
-		
+
+func refresh_lobbies():
+	Steam.addRequestLobbyListDistanceFilter(SEARCH_DISTANCE.Close)
+	Steam.requestLobbyList()
+
 func check_command_line():
 	var ARGUMENTS = OS.get_cmdline_args()
 	
@@ -207,11 +216,10 @@ func _on_lobby_search_text_changed(_new_text: String) -> void:
 		child.queue_free()
 	
 	# Request new lobby list
-	Steam.addRequestLobbyListDistanceFilter(SEARCH_DISTANCE.Close)
-	Steam.requestLobbyList()
+	refresh_lobbies()
 
 func _on_refresh_button_pressed() -> void:
 	for child in lobby_list.get_children():
 		child.queue_free()
-	Steam.addRequestLobbyListDistanceFilter(SEARCH_DISTANCE.Close)
-	Steam.requestLobbyList()
+		
+	refresh_lobbies()

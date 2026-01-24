@@ -54,6 +54,10 @@ func _process_draw_queue() -> void:
 		draw_queue_finished.emit()
 		
 func _spawn_single_card() -> void:
+	if not is_instance_valid(deck):
+		push_error("Deck is not valid when trying to spawn card")
+		return
+		
 	var card_scene := preload("res://Scenes/card.tscn")
 	var card: Card = card_scene.instantiate()
 

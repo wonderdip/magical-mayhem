@@ -9,6 +9,7 @@ var initialized : bool = false
 var LOBBY_ID: int = 0
 var LOBBY_MEMBERS =[]
 var LOBBY_INVITE_ARG: bool = false
+const GAMEFILTERID : String = "MagicalMayhem1234xx10x1908"
 
 func _ready():
 	if initialized:

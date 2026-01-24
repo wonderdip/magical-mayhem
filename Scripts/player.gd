@@ -20,6 +20,7 @@ var hand_p2: Node2D
 var current_hand: Node2D
 
 var lobby: Node2D
+var hands_created := false
 
 var player_has_drawn := {
 	PhaseManager.PlayerTurn.PLAYER_1: false,
@@ -35,32 +36,37 @@ func _ready() -> void:
 		
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
+	# Create hands after nodes are ready
+	if lobby and lobby.player_two_node != null and not hands_created:
+		_create_hands()
+		_start_game()
+	
 func _create_hands() -> void:
+	hands_created = true
+	
 	# Instantiate Player 1's hand
 	hand_p1 = hand_scene.instantiate()
 	hand_p1.name = "HandP1"
-	add_child(hand_p1)
 	hand_p1.deck = deck
 	hand_p1.discard = discard
 	hand_p1.natures = natures
+	add_child(hand_p1)
+	
 	
 	# Instantiate Player 2's hand
 	hand_p2 = hand_scene.instantiate()
 	hand_p2.name = "HandP2"
-	hand_p2.deck = deck
-	hand_p2.discard = discard
-	hand_p2.natures = natures
+	
+	# Use Player 2's deck/discard/natures
+	hand_p2.deck = lobby.player_two_node.deck
+	hand_p2.discard = lobby.player_two_node.discard
+	hand_p2.natures = lobby.player_two_node.natures
 	
 	hand_p2.visible = false
 	
 	if lobby.player_two_node != null:
 		lobby.player_two_node.add_child(hand_p2)
-	
-	# Set current hand to player 1
-	current_hand = hand_p1
-	hand_p1.active_hand = true
-	hand_p2.active_hand = false
-	
+		
 func _start_game() -> void:
 	# Give both players starting resources
 	for player in [PhaseManager.PlayerTurn.PLAYER_1, PhaseManager.PlayerTurn.PLAYER_2]:
@@ -71,6 +77,9 @@ func _start_game() -> void:
 	
 	# Draw initial cards for player 1
 	current_hand = hand_p1
+	hand_p1.active_hand = true
+	hand_p2.active_hand = false
+	
 	_spawn_card(4)
 	player_has_drawn[PhaseManager.PlayerTurn.PLAYER_1] = true
 	natures.update_for_player()
@@ -164,6 +173,7 @@ func _on_phase_changed() -> void:
 				
 				player_has_drawn[PhaseManager.current_player_turn] = true
 				natures.update_for_player()
+				
 		PhaseManager.Phase.BATTLE:
 			PlayerManager.calculate_attack()
 			match PhaseManager.current_player_turn:
