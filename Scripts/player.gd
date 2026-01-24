@@ -21,6 +21,7 @@ var current_hand: Node2D
 
 var lobby: Node2D
 var hands_created := false
+var player_role: int = 0  # 1 for Player 1, 2 for Player 2
 
 var player_has_drawn := {
 	PhaseManager.PlayerTurn.PLAYER_1: false,
@@ -31,17 +32,19 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
 func _ready() -> void:
+	# Only Player 1's node manages the game state
+	if player_role != 1:
+		return
+		
 	if !is_multiplayer_authority():
 		return
 		
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
-	# Create hands after nodes are ready
-	if lobby and lobby.player_two_node != null and not hands_created:
-		_create_hands()
-		_start_game()
-	
 func _create_hands() -> void:
+	if hands_created:
+		return
+		
 	hands_created = true
 	
 	# Instantiate Player 1's hand
@@ -52,19 +55,17 @@ func _create_hands() -> void:
 	hand_p1.natures = natures
 	add_child(hand_p1)
 	
-	
 	# Instantiate Player 2's hand
 	hand_p2 = hand_scene.instantiate()
 	hand_p2.name = "HandP2"
 	
 	# Use Player 2's deck/discard/natures
-	hand_p2.deck = lobby.player_two_node.deck
-	hand_p2.discard = lobby.player_two_node.discard
-	hand_p2.natures = lobby.player_two_node.natures
-	
-	hand_p2.visible = false
-	
 	if lobby.player_two_node != null:
+		hand_p2.deck = lobby.player_two_node.deck
+		hand_p2.discard = lobby.player_two_node.discard
+		hand_p2.natures = lobby.player_two_node.natures
+		
+		hand_p2.visible = false
 		lobby.player_two_node.add_child(hand_p2)
 		
 func _start_game() -> void:
@@ -75,7 +76,7 @@ func _start_game() -> void:
 		PlayerManager.player_natures[player][PlayerManager.Nature.WIND] = 3
 		PlayerManager.player_natures[player][PlayerManager.Nature.EARTH] = 3
 	
-	# Draw initial cards for player 1
+	# Set Player 1's hand as active
 	current_hand = hand_p1
 	hand_p1.active_hand = true
 	hand_p2.active_hand = false
@@ -104,23 +105,36 @@ func _switch_active_hand() -> void:
 		hand_p2.active_hand = true
 		
 func _play_card():
+	# Only let the active player play cards
+	if player_role == 1 and PhaseManager.current_player_turn != PhaseManager.PlayerTurn.PLAYER_1:
+		return
+	if player_role == 2 and PhaseManager.current_player_turn != PhaseManager.PlayerTurn.PLAYER_2:
+		return
+		
 	if PhaseManager.current_phase != PhaseManager.Phase.DRAW:
-		current_hand.play_cards()
+		if player_role == 1:
+			hand_p1.play_cards()
+		else:
+			hand_p2.play_cards()
 
 func _spawn_card(amount: int) -> void:
-	current_hand.add_card(amount)
+	if current_hand:
+		current_hand.add_card(amount)
 		
 func _discard_card(dragged_card: Card):
-	if current_hand.cards.size() > 0:
+	if current_hand and current_hand.cards.size() > 0:
 		current_hand.stop_dragging()
 		current_hand.remove_card(dragged_card)
 	
 func _on_button_pressed() -> void:
 	PlayerManager.add_natures(1)
-	natures.update_for_player()
+	if player_role == 1:
+		natures.update_for_player()
+	elif player_role == 2 and lobby.player_two_node:
+		lobby.player_two_node.natures.update_for_player()
 	
 func _process(_delta: float) -> void:
-	# Update phase label
+	# Update UI labels
 	match PhaseManager.current_phase:
 		PhaseManager.Phase.DRAW:
 			label.text = "DRAW PHASE"
@@ -134,7 +148,7 @@ func _process(_delta: float) -> void:
 	label_3.text = str(PlayerManager.current_attack)
 	label_4.text = str(PlayerManager.current_block)
 	
-	# Update player label
+	# Show which player's turn it is
 	match PhaseManager.current_player_turn:
 		PhaseManager.PlayerTurn.PLAYER_1:
 			label_2.text = "PLAYER ONE TURN"
@@ -142,29 +156,32 @@ func _process(_delta: float) -> void:
 			label_2.text = "PLAYER TWO TURN"
 		
 func _on_phase_changed() -> void:
+	# Only Player 1's node handles phase changes
+	if player_role != 1:
+		return
+		
 	match PhaseManager.current_phase:
 		PhaseManager.Phase.DRAW:
-			# Switch to the current player's hand
 			_switch_active_hand()
-			
-			# Draw phase: draw cards and add natures
 			
 			_spawn_card(PhaseManager.card_draw_amount)
 			player_has_drawn[PhaseManager.current_player_turn] = true
 			
 			PlayerManager.add_natures(PhaseManager.nature_draw_amount)
-			natures.update_for_player()
 			
-			# Automatically move to play phase after a short delay
+			# Update the correct player's natures display
+			if PhaseManager.current_player_turn == PhaseManager.PlayerTurn.PLAYER_1:
+				natures.update_for_player()
+			else:
+				lobby.player_two_node.natures.update_for_player()
+			
 			await get_tree().create_timer(0.5).timeout
 			PhaseManager._change_phase()
 			
 		PhaseManager.Phase.PLAY:
-			# Play phase: players can play cards
 			pass
 			
 		PhaseManager.Phase.DEFEND:
-			# Defend phase: handle defense/damage
 			_switch_active_hand()
 			
 			if PhaseManager.current_player_turn == PhaseManager.PlayerTurn.PLAYER_2:
@@ -172,24 +189,28 @@ func _on_phase_changed() -> void:
 				_spawn_card(draw_amount)
 				
 				player_has_drawn[PhaseManager.current_player_turn] = true
-				natures.update_for_player()
+				lobby.player_two_node.natures.update_for_player()
 				
 		PhaseManager.Phase.BATTLE:
 			PlayerManager.calculate_attack()
 			match PhaseManager.current_player_turn:
 				PhaseManager.PlayerTurn.PLAYER_2:
 					PlayerManager.player_two_health -= PlayerManager.current_attack
-					print(PlayerManager.player_one_health)
-					print(PlayerManager.player_two_health)
+					print("P1 Health: ", PlayerManager.player_one_health, " P2 Health: ", PlayerManager.player_two_health)
 				PhaseManager.PlayerTurn.PLAYER_1:
 					PlayerManager.player_one_health -= PlayerManager.current_attack
-					print(PlayerManager.player_one_health)
-					print(PlayerManager.player_two_health)
+					print("P1 Health: ", PlayerManager.player_one_health, " P2 Health: ", PlayerManager.player_two_health)
 					
 			PlayerManager.current_attack = 0
 			PlayerManager.current_block = 0
 			PhaseManager._change_phase()
 			
 func _on_end_turn_pressed() -> void:
-	if PhaseManager.current_phase != PhaseManager.Phase.DRAW:
+	# Only let the active player end their turn
+	if player_role == 1 and PhaseManager.current_player_turn != PhaseManager.PlayerTurn.PLAYER_1:
+		return
+	if player_role == 2 and PhaseManager.current_player_turn != PhaseManager.PlayerTurn.PLAYER_2:
+		return
+		
+	if PhaseManager.current_phase != PhaseManager.Phase.DRAW and player_role == 1:
 		PhaseManager._change_phase()
