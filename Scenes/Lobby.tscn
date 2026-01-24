@@ -97,9 +97,9 @@ offset_bottom = 364.0
 [node name="ScrollContainer" type="ScrollContainer" parent="UI"]
 layout_mode = 0
 offset_left = 105.0
-offset_top = 398.0
+offset_top = 428.0
 offset_right = 580.0
-offset_bottom = 752.0
+offset_bottom = 782.0
 horizontal_scroll_mode = 0
 
 [node name="LobbyList" type="VBoxContainer" parent="UI/ScrollContainer"]
@@ -112,6 +112,15 @@ offset_top = 355.0
 offset_right = 264.0
 offset_bottom = 386.0
 placeholder_text = "Search Lobbys"
+
+[node name="Label" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 397.0
+offset_right = 236.0
+offset_bottom = 446.0
+text = "Available Lobbies:
+"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://by7yopupguxum")

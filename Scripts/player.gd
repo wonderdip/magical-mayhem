@@ -1,7 +1,9 @@
 extends Node2D
+class_name Player
 
 @onready var deck: Node2D = $Deck
 @onready var discard: Node2D = $Discard
+
 @onready var label: Label = $Label
 @onready var label_2: Label = $Label2
 @onready var label_3: Label = $Label3
@@ -28,28 +30,36 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
 func _ready() -> void:
-	lobby = get_parent()
 	if !is_multiplayer_authority():
 		return
 		
 	PhaseManager.phase_changed.connect(self._on_phase_changed)
 	
-
-
 func _create_hands() -> void:
 	# Instantiate Player 1's hand
 	hand_p1 = hand_scene.instantiate()
 	hand_p1.name = "HandP1"
 	add_child(hand_p1)
+	hand_p1.deck = deck
+	hand_p1.discard = discard
+	hand_p1.natures = natures
 	
 	# Instantiate Player 2's hand
 	hand_p2 = hand_scene.instantiate()
 	hand_p2.name = "HandP2"
+	hand_p2.deck = deck
+	hand_p2.discard = discard
+	hand_p2.natures = natures
+	
 	hand_p2.visible = false
-	SteamInitializer.player_two_node.add_child(hand_p2)
+	
+	if lobby.player_two_node != null:
+		lobby.player_two_node.add_child(hand_p2)
 	
 	# Set current hand to player 1
 	current_hand = hand_p1
+	hand_p1.active_hand = true
+	hand_p2.active_hand = false
 	
 func _start_game() -> void:
 	# Give both players starting resources
@@ -74,11 +84,15 @@ func _switch_active_hand() -> void:
 	if PhaseManager.current_player_turn == PhaseManager.PlayerTurn.PLAYER_1:
 		current_hand = hand_p1
 		hand_p1.visible = true
+		hand_p1.active_hand = true
 		hand_p2.visible = false
+		hand_p2.active_hand = false
 	else:
 		current_hand = hand_p2
 		hand_p1.visible = false
+		hand_p1.active_hand = false
 		hand_p2.visible = true
+		hand_p2.active_hand = true
 		
 func _play_card():
 	if PhaseManager.current_phase != PhaseManager.Phase.DRAW:

@@ -9,9 +9,9 @@ signal draw_queue_finished
 @export var card_spacing := 150.0
 @export var max_rotation := 15.0
 
-@onready var deck: Node2D = $"../Deck"
-@onready var discard: Node2D = $"../Discard"
-@onready var natures: Node2D = $"../Natures"
+var deck: Node2D
+var discard: Node2D
+var natures: Node2D
 
 @export var min_hand_width := 160.0
 @export var max_cards := 10
@@ -29,6 +29,7 @@ var _draw_queue: int = 0
 var _is_drawing: bool = false
 var _discard_queue: Array[Card] = []
 var _is_discarding: bool = false
+var active_hand: bool
 
 func add_card(amount: int = 1) -> void:
 	if amount <= 0:

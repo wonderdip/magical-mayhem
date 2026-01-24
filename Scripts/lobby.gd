@@ -30,8 +30,8 @@ var lobby_visibility: LOBBY_TYPE = LOBBY_TYPE.LOBBY_TYPE_PUBLIC
 @onready var lobby_list: VBoxContainer = $UI/ScrollContainer/LobbyList
 @onready var lobby_search: LineEdit = $UI/LobbySearch
 
-var player_one_node: Node2D
-var player_two_node: Node2D
+var player_one_node: Player
+var player_two_node: Player
 
 func _ready() -> void:
 	username.text = SteamInitializer.STEAM_NAME
@@ -96,6 +96,7 @@ func _add_player(id: int = 1):
 	var player = player_scene.instantiate()
 	player.name = str(id)
 	call_deferred("add_child", player)
+	player.lobby = self
 	
 	match SteamInitializer.LOBBY_MEMBERS.size():
 		1:
@@ -103,8 +104,8 @@ func _add_player(id: int = 1):
 		2:
 			player_two_node = player
 		# Create hands manually
-	if SteamInitializer.LOBBY_MEMBERS.size() == MAX_PLAYERS:
-		player_one_node.create_hands()
+	if SteamInitializer.LOBBY_MEMBERS.size() == MAX_PLAYERS - 1:
+		player_one_node._create_hands()
 		
 		# Start the game after a brief delay
 		await get_tree().create_timer(1).timeout
@@ -162,7 +163,7 @@ func _on_Lobby_Match_List(lobbies: Array):
 		var LOBBY_BUTTON = Button.new()
 		LOBBY_BUTTON.text = "Lobby: " + LOBBY_NAME + " Members: " + str(LOBBY_MEMBERS) + "/2" + " Lobby ID: " + str(LOBBY)
 		LOBBY_BUTTON.size = Vector2(100, 20)
-		LOBBY_BUTTON.pressed.connect(join_lobby.bind(LOBBY, LOBBY_NAME))
+		LOBBY_BUTTON.pressed.connect(join_lobby.bind(LOBBY))
 		lobby_list.add_child(LOBBY_BUTTON)
 		
 func check_command_line():

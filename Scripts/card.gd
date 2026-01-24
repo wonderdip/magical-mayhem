@@ -209,7 +209,7 @@ func _process(delta: float) -> void:
 	if not is_inside_tree() or discarded:
 		return
 		
-	if PhaseManager.current_phase == PhaseManager.Phase.DEFEND and card_stat.Card_Type == "Offensive":
+	if (PhaseManager.current_phase == PhaseManager.Phase.DEFEND and card_stat.Card_Type == "Offensive") or hand.active_hand == false:
 		modulate = Color(0.5, 0.5, 0.5, 1.0)
 	else:
 		modulate = Color.WHITE

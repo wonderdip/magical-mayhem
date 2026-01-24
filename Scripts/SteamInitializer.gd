@@ -10,8 +10,6 @@ var LOBBY_ID: int = 0
 var LOBBY_MEMBERS =[]
 var LOBBY_INVITE_ARG: bool = false
 
-
-
 func _ready():
 	if initialized:
 		return
